@@ -1,0 +1,30 @@
+{
+    "name": "innmind/neo4j-bundle",
+    "type": "symfony-bundle",
+    "description": "This Bundle wraps the innmind neo4j onm library",
+    "keywords": ["neo4j", "orm"],
+    "homepage": "http://github.com/Innmind/Neo4jBundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Baptiste Langlade",
+            "email": "langlade.baptiste@gmail.com"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/Innmind/Neo4jBundle/issues"
+    },
+    "require": {
+        "php": ">=5.5",
+        "psr/log": "~1.0",
+        "symfony/dependency-injection": "~2.7",
+        "symfony/http-kernel": "~2.7",
+        "symfony/config": "~2.7"
+    },
+    "autoload": {
+        "psr-0": {
+            "Innmind\\Neo4jBundle": ""
+        }
+    },
+    "target-dir": "Innmind/Neo4jBundle"
+}
