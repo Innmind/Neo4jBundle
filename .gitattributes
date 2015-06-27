@@ -4,3 +4,4 @@
 /circle.yml export-ignore
 /phpunit.xml.dist export-ignore
 /Tests export-ignore
+/Fixtures export-ignore
