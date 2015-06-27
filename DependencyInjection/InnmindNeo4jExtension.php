@@ -55,8 +55,7 @@ class InnmindNeo4jExtension extends Extension
                 ]
             );
             $configDef
-                ->setFactoryClass(Conf::class)
-                ->setFactoryMethod('create')
+                ->setFactory([Conf::class, 'create'])
                 ->setPublic(false)
                 ->addTag('innmind_neo4j.config');
 
@@ -72,8 +71,7 @@ class InnmindNeo4jExtension extends Extension
                 ]
             );
             $def
-                ->setFactoryClass(EntityManagerFactory::class)
-                ->setFactoryMethod('make')
+                ->setFactory([EntityManagerFactory::class, 'make'])
                 ->addTag('innmind_neo4j.manager', ['alias' => $name]);
 
             $container->setDefinition(

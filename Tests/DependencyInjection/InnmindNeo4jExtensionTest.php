@@ -79,11 +79,11 @@ class InnmindNeo4jExtensionTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertSame(
             EntityManagerFactory::class,
-            $def->getFactoryClass()
+            $def->getFactory()[0]
         );
         $this->assertSame(
             'make',
-            $def->getFactoryMethod()
+            $def->getFactory()[1]
         );
         $this->assertSame(
             [
@@ -116,11 +116,11 @@ class InnmindNeo4jExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($def->isPublic());
         $this->assertSame(
             Conf::class,
-            $def->getFactoryClass()
+            $def->getFactory()[0]
         );
         $this->assertSame(
             'create',
-            $def->getFactoryMethod()
+            $def->getFactory()[1]
         );
         $this->assertSame(
             [
