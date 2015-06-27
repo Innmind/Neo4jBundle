@@ -53,10 +53,10 @@ class FileDumperTest extends \PHPUnit_Framework_TestCase
         $this->fd->dump($meta->getClass(), $file);
         $this->assertTrue(file_exists($path . '~'));
 
-        @unlink($path);
-        @unlink($path . '~');
-        @rmdir('src/Innmind/Entity');
-        @rmdir('src/Innmind');
-        @rmdir('src');
+        unlink($path);
+        unlink($path . '~');
+        rmdir('src/Innmind/Entity');
+        rmdir('src/Innmind');
+        rmdir('src');
     }
 }

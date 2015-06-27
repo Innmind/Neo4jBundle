@@ -55,10 +55,10 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(file_exists('src/Innmind/Entity/Resource.php'));
         $this->assertTrue(file_exists('src/Innmind/Entity/ResourceRepository.php'));
 
-        @unlink('src/Innmind/Entity/Resource.php');
-        @unlink('src/Innmind/Entity/ResourceRepository.php');
-        @rmdir('src/Innmind/Entity');
-        @rmdir('src/Innmind');
-        @rmdir('src');
+        unlink('src/Innmind/Entity/Resource.php');
+        unlink('src/Innmind/Entity/ResourceRepository.php');
+        rmdir('src/Innmind/Entity');
+        rmdir('src/Innmind');
+        rmdir('src');
     }
 }
