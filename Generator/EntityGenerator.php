@@ -32,7 +32,7 @@ class EntityGenerator
         foreach ($meta->getProperties() as $property) {
             $properties[] = $this->generateProperty($property);
             $methods[] = $this->generateGetter($property);
-            $methods[] = $this->generateSetter($property, $map);
+            $methods[] = $this->generateSetter($property);
         }
 
         $object = Object::make($meta->getClass());
@@ -73,11 +73,10 @@ class EntityGenerator
      * Generate the setter for the given property
      *
      * @param Property $property
-     * @param IdentityMap $map
      *
      * @return Method
      */
-    protected function generateSetter(Property $property, IdentityMap $map)
+    protected function generateSetter(Property $property)
     {
         $name = $property->getName();
         $method = new Method(sprintf(
