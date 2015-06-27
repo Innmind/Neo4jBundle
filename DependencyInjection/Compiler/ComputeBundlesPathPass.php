@@ -22,7 +22,6 @@ class ComputeBundlesPathPass implements CompilerPassInterface
             $def = $container->getDefinition($id);
             $args = $def->getArguments();
             $args[0]['locations'] = $this->computeLocations(
-                $container,
                 $bundles,
                 $args[0]['locations']
             );
@@ -33,14 +32,12 @@ class ComputeBundlesPathPass implements CompilerPassInterface
     /**
      * Replace the bundles' name by the appropriate path to the config location
      *
-     * @param ContainerBuilder $container
      * @param array $bundles
      * @param array $locations
      *
      * @return array
      */
     protected function computeLocations(
-        ContainerBuilder $container,
         array $bundles,
         array $locations
     ) {
