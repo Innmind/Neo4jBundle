@@ -2,6 +2,8 @@
 
 namespace Innmind\Neo4jBundle;
 
+use Innmind\Neo4j\ONM\EntityManagerInterface;
+
 /**
  * Holds all the managers declared in the app
  */
