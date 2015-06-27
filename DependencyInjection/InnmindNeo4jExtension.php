@@ -57,7 +57,8 @@ class InnmindNeo4jExtension extends Extension
             $configDef
                 ->setFactoryClass(Conf::class)
                 ->setFactoryMethod('create')
-                ->setPublic(false);
+                ->setPublic(false)
+                ->addTag('innmind_neo4j.config');
 
             $def = new Definition(
                 null,

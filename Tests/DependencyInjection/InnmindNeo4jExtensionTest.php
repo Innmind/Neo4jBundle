@@ -122,6 +122,12 @@ class InnmindNeo4jExtensionTest extends \PHPUnit_Framework_TestCase
             'create',
             $def->getFactoryMethod()
         );
+        $this->assertSame(
+            [
+                'innmind_neo4j.config' => [[]],
+            ],
+            $def->getTags()
+        );
     }
 
     public function testRegistryDefintion()
