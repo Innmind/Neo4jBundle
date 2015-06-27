@@ -1,3 +1,5 @@
 parameters:
 
 services:
+    innmind_neo4j.registry:
+        class: Innmind\Neo4jBundle\ManagerRegistry
