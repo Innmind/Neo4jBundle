@@ -20,6 +20,7 @@ class EntityGenerator
      * Generate the code to create a class corresponding to the given metadata
      *
      * @param Metadata $meta
+     * @param IdentityMap $map
      *
      * @return File
      */
