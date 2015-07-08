@@ -141,4 +141,21 @@ class InnmindNeo4jExtensionTest extends \PHPUnit_Framework_TestCase
             $def->getMethodCalls()
         );
     }
+
+    public function testAliasesAreSet()
+    {
+        $this->assertTrue($this->container->hasAlias('neo4j'));
+        $this->assertTrue($this->container->hasAlias('graph'));
+    }
+
+    public function testAliasesAreNotSet()
+    {
+        $this->config['innmind_neo4j']['disable_aliases'] = true;
+        $container = new ContainerBuilder;
+        $this->extension->load($this->config, $container);
+
+        $this->assertFalse($container->hasAlias('neo4j'));
+        $this->assertFalse($container->hasAlias('graph'));
+
+    }
 }

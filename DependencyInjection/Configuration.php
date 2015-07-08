@@ -42,6 +42,9 @@ class Configuration implements ConfigurationInterface
             ->end()
             ->scalarNode('default_manager')
                 ->defaultValue('default')
+            ->end()
+            ->booleanNode('disable_aliases')
+                ->defaultValue(false)
             ->end();
 
         return $treeBuilder;

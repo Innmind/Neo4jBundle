@@ -11,6 +11,7 @@ use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Parameter;
+use Symfony\Component\DependencyInjection\Alias;
 
 class InnmindNeo4jExtension extends Extension
 {
@@ -90,5 +91,16 @@ class InnmindNeo4jExtension extends Extension
         $container
             ->getDefinition('innmind_neo4j.registry')
             ->addMethodCall('setDefaultManager', [$defaultManager]);
+
+        if ($config['disable_aliases'] === false) {
+            $container->setAlias(
+                'neo4j',
+                new Alias('innmind_neo4j.registry')
+            );
+            $container->setAlias(
+                'graph',
+                new Alias('innmind_neo4j.registry')
+            );
+        }
     }
 }
