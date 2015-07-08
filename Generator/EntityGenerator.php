@@ -95,7 +95,7 @@ class EntityGenerator
         ];
 
         if (isset($castable[$type])) {
-            $cast = sprintf('(%s)', $castable[$type]);
+            $cast = sprintf('(%s) ', $castable[$type]);
         } else {
             $cast = '';
         }
@@ -117,7 +117,7 @@ class EntityGenerator
 
         $method->addArgument(new Argument($type, $name));
         $method->setBody(<<<EOF
-        \$this->$name = $cast \$$name;
+        \$this->$name = $cast\$$name;
 
         return \$this;
 EOF

@@ -87,7 +87,7 @@ class Resource
 
     public function setCreated(DateTime \$created)
     {
-        \$this->created =  \$created;
+        \$this->created = \$created;
 
         return \$this;
     }
@@ -99,7 +99,7 @@ class Resource
 
     public function setReferrer(Referrer \$referrer)
     {
-        \$this->referrer =  \$referrer;
+        \$this->referrer = \$referrer;
 
         return \$this;
     }
@@ -193,7 +193,7 @@ class Referrer
 
     public function setCreated(DateTime \$created)
     {
-        \$this->created =  \$created;
+        \$this->created = \$created;
 
         return \$this;
     }
@@ -205,7 +205,7 @@ class Referrer
 
     public function setStart(Resource \$start)
     {
-        \$this->start =  \$start;
+        \$this->start = \$start;
 
         return \$this;
     }
@@ -217,7 +217,7 @@ class Referrer
 
     public function setEnd(Resource \$end)
     {
-        \$this->end =  \$end;
+        \$this->end = \$end;
 
         return \$this;
     }
