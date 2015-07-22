@@ -53,6 +53,7 @@ innmind_neo4j:
             bundles: []         #optional
     default_manager: my_manager # default to : default
     disbale_aliases: false      # optional
+```
 
 ## Configuration
 
