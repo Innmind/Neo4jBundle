@@ -3,6 +3,7 @@
 namespace Innmind\Neo4jBundle\DependencyInjection;
 
 use Innmind\Neo4j\ONM\EntityManagerFactory;
+use Innmind\Neo4j\ONM\EntityManager;
 use Innmind\Neo4j\ONM\Configuration as Conf;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
@@ -45,7 +46,7 @@ class InnmindNeo4jExtension extends Extension
             }
 
             $configDef = new Definition(
-                null,
+                Conf::class,
                 [
                     [
                         'reader' => $manager['reader'],
@@ -64,7 +65,7 @@ class InnmindNeo4jExtension extends Extension
                 ->addTag('innmind_neo4j.config');
 
             $def = new Definition(
-                null,
+                EntityManager::class,
                 [
                     $config['connections'][$manager['connection']],
                     new Reference(sprintf(
