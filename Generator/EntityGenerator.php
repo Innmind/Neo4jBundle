@@ -114,7 +114,8 @@ class EntityGenerator
                 $type = $property->getOption('node');
                 break;
             default:
-                $type = null;
+                $type = 'mixed';
+                break;
         }
 
         $method->addArgument(new Argument($type, $name));
