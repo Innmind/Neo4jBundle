@@ -113,6 +113,9 @@ class EntityGenerator
             case 'endNode':
                 $type = $property->getOption('node');
                 break;
+            default:
+                $type = 'mixed';
+                break;
         }
 
         $method->addArgument(new Argument($type, $name));
