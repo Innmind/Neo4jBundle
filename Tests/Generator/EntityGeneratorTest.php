@@ -46,6 +46,7 @@ class EntityGeneratorTest extends \PHPUnit_Framework_TestCase
 
         $expected = <<<EOF
 <?php
+
 namespace Innmind\Entity;
 
 use DateTime;
@@ -147,6 +148,7 @@ EOF;
 
         $expected = <<<EOF
 <?php
+
 namespace Innmind\Entity;
 
 use DateTime;

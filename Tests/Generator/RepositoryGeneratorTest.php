@@ -22,6 +22,7 @@ class RepositoryGeneratorTest extends \PHPUnit_Framework_TestCase
 
         $expected = <<<EOF
 <?php
+
 namespace Innmind\Entity;
 
 use Innmind\Neo4j\ONM\Repository;

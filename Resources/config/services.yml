@@ -7,9 +7,9 @@ services:
     innmind_neo4j.generator:
         class: Innmind\Neo4jBundle\Generator
         arguments:
-            - @innmind_neo4j.generator.entity
-            - @innmind_neo4j.generator.repository
-            - @innmind_neo4j.file_dumper
+            - '@innmind_neo4j.generator.entity'
+            - '@innmind_neo4j.generator.repository'
+            - '@innmind_neo4j.file_dumper'
 
     innmind_neo4j.generator.entity:
         class: Innmind\Neo4jBundle\Generator\EntityGenerator
