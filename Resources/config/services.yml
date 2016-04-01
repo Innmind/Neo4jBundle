@@ -1,23 +1,4 @@
 parameters:
 
 services:
-    innmind_neo4j.registry:
-        class: Innmind\Neo4jBundle\ManagerRegistry
 
-    innmind_neo4j.generator:
-        class: Innmind\Neo4jBundle\Generator
-        arguments:
-            - '@innmind_neo4j.generator.entity'
-            - '@innmind_neo4j.generator.repository'
-            - '@innmind_neo4j.file_dumper'
-
-    innmind_neo4j.generator.entity:
-        class: Innmind\Neo4jBundle\Generator\EntityGenerator
-        public: false
-
-    innmind_neo4j.generator.repository:
-        class: Innmind\Neo4jBundle\Generator\RepositoryGenerator
-        public: false
-
-    innmind_neo4j.file_dumper:
-        class: Innmind\Neo4jBundle\FileDumper
