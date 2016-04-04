@@ -1,4 +1,161 @@
 parameters:
 
 services:
+    innmind_neo4j.manager:
+        class: Innmind\Neo4j\ONM\Manager
+        arguments:
+            - '@innmind_neo4j.unit_of_work'
+            - '@innmind_neo4j.metadatas'
+            - '@innmind_neo4j.repository_factory'
+            - '@innmind_neo4j.generators'
 
+    innmind_neo4j.unit_of_work:
+        class: Innmind\Neo4j\ONM\UnitOfWork
+        arguments:
+            - '@innmind_neo4j.connection'
+            - '@innmind_neo4j.entity_container'
+            - '@innmind_neo4j.entity_factory'
+            - '@innmind_neo4j.translator.identity_match'
+            - '@innmind_neo4j.metadatas'
+            - ~
+            - '@innmind_neo4j.generators'
+        public: false
+
+    innmind_neo4j.connection:
+        class: Innmind\Neo4j\DBAL\Connection
+        arguments:
+            - '@innmind_neo4j.connection.transport'
+            - '@innmind_neo4j.connection.transactions'
+        public: false
+
+    innmind_neo4j.connection.transport:
+        class: Innmind\Neo4j\DBAL\Transport\Http
+        arguments:
+            - '@innmind_neo4j.connection.translator'
+            - '@event_dispatcher'
+            - ~
+            - ~
+        public: false
+
+    innmind_neo4j.connection.translator:
+        class: Innmind\Neo4j\DBAL\Translator\HttpTranslator
+        arguments:
+            - '@innmind_neo4j.transactions'
+        public: false
+
+    innmind_neo4j.connection.transactions:
+        class: Innmind\Neo4j\DBAL\Transactions
+        arguments:
+            - ~
+            - ~
+            - ~
+        public: false
+
+    innmind_neo4j.entity_container:
+        class: Innmind\Neo4j\ONM\Entity\Container
+        public: false
+
+    innmind_neo4j.entity_factory:
+        class: Innmind\Neo4j\ONM\EntityFactory
+        arguments:
+            - '@innmind_neo4j.translator.result'
+            - '@innmind_neo4j.generators'
+            - '@innmind_neo4j.entity_factory.resolver'
+            - '@innmind_neo4j.entity_container'
+        public: false
+
+    innmind_neo4j.translator.result:
+        class: Innmind\Neo4j\ONM\Translation\ResultTranslator
+        arguments:
+            - ~
+        public: false
+
+    innmind_neo4j.generators:
+        class: Innmind\Neo4j\ONM\Identity\Generators
+        public: false
+
+    innmind_neo4j.entity_factory.resolver:
+        class: Innmind\Neo4j\ONM\EntityFactory\Resolver
+        public: false
+
+    innmind_neo4j.metadatas:
+        class: Innmind\Neo4j\ONM\Metadatas
+        public: false
+        factory:
+            - '@innmind_neo4j.metadata_builder'
+            - container
+
+    innmind_neo4j.metadata_builder:
+        class: Innmind\Neo4j\ONM\MetadataBuilder
+        arguments:
+            - '@innmind_neo4j.types'
+            - ~
+            - ~
+        public: false
+
+    innmind_neo4j.types:
+        class: Innmind\Neo4j\ONM\Types
+        public: false
+
+    innmind_neo4j.translator.identity_match:
+        class: Innmind\Neo4j\ONM\Translation\IdentityMatchTranslator
+        arguments:
+            - ~
+        public: false
+
+    innmind_neo4j.persister.delegation:
+        class: Innmind\Neo4j\ONM\Persister\DelegationPersister
+        arguments:
+            - ~
+        public: false
+
+    innmind_neo4j.persister.insert:
+        class: Innmind\Neo4j\ONM\Persister\InsertPersister
+        arguments:
+            - '@innmind_neo4j.entity.changeset_computer'
+            - '@event_dispatcher'
+            - '@innmind_neo4j.entity.data_extractor'
+            - '@innmind_neo4j.metadatas'
+        public: false
+
+    innmind_neo4j.persister.update:
+        class: Innmind\Neo4j\ONM\Persister\UpdatePersister
+        arguments:
+            - '@innmind_neo4j.entity.changeset_computer'
+            - '@event_dispatcher'
+            - '@innmind_neo4j.entity.data_extractor'
+            - '@innmind_neo4j.metadatas'
+        public: false
+
+    innmind_neo4j.persister.remove:
+        class: Innmind\Neo4j\ONM\Persister\RemovePersister
+        arguments:
+            - '@innmind_neo4j.entity.changeset_computer'
+            - '@event_dispatcher'
+            - '@innmind_neo4j.metadatas'
+        public: false
+
+    innmind_neo4j.entity.changeset_computer:
+        class: Innmind\Neo4j\ONM\Entity\ChangesetComputer
+        public: false
+
+    innmind_neo4j.entity.data_extractor:
+        class: Innmind\Neo4j\ONM\Entity\DataExtractor
+        public: false
+
+    innmind_neo4j.repository_factory:
+        class: Innmind\Neo4j\ONM\RepositoryFactory
+        arguments:
+            - '@innmind_neo4j.unit_of_work'
+            - '@innmind_neo4j.translator.match'
+            - '@innmind_neo4j.translator.specification'
+        public: false
+        configurator:
+            - '@innmind_neo4j.repository_factory.configurator'
+            - configure
+
+    innmind_neo4j.repository_factory.configurator:
+        class: Innmind\Neo4jBundle\RepositoryFactoryConfigurator
+        arguments:
+            - '@innmind_neo4j.metadatas'
+        public: false
