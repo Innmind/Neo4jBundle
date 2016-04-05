@@ -2,9 +2,11 @@
 
 namespace Innmind\Neo4jBundle\DependencyInjection;
 
-use Symfony\Component\Config\Definition\Builder\TreeBuilder;
-use Symfony\Component\Config\Definition\Builder\NodeBuilder;
-use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\Config\Definition\{
+    Builder\TreeBuilder,
+    Builder\NodeBuilder,
+    ConfigurationInterface
+};
 
 class Configuration implements ConfigurationInterface
 {
