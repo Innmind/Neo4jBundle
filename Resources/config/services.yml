@@ -1,4 +1,6 @@
 parameters:
+    innmind_neo4j.translator.result.aggregate.class: Innmind\Neo4j\ONM\Translation\Result\AggregateTranslator
+    innmind_neo4j.translator.result.relationship.class: Innmind\Neo4j\ONM\Translation\Result\RelationshipTranslator
 
 services:
     innmind_neo4j.manager:
@@ -67,8 +69,11 @@ services:
 
     innmind_neo4j.translator.result:
         class: Innmind\Neo4j\ONM\Translation\ResultTranslator
+        factory:
+            - Innmind\Neo4jBundle\Factory\ResultTranslatorFactory
+            - make
         arguments:
-            - ~
+            - []
         public: false
 
     innmind_neo4j.generators:
@@ -160,3 +165,15 @@ services:
         arguments:
             - '@innmind_neo4j.metadatas'
         public: false
+
+    innmind_neo4j.translator.result.aggregate:
+        class: %innmind_neo4j.translator.result.aggregate.class%
+        public: false
+        tags:
+            - { name: 'innmind_neo4j.translation.result', type: Innmind\Neo4j\ONM\Metadata\Aggregate }
+
+    innmind_neo4j.translator.result.relationship:
+        class: %innmind_neo4j.translator.result.relationship.class%
+        public: false
+        tags:
+            - { name: 'innmind_neo4j.translation.result', type: Innmind\Neo4j\ONM\Metadata\Relationship }
