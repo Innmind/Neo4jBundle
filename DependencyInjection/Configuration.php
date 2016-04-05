@@ -22,6 +22,7 @@ class Configuration implements ConfigurationInterface
         $root
             ->children()
                 ->arrayNode('connection')
+                    ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('host')
                             ->defaultValue('localhost')
