@@ -35,6 +35,7 @@ services:
             - '@event_dispatcher'
             - ~
             - ~
+            - ~
         public: false
 
     innmind_neo4j.connection.translator:
