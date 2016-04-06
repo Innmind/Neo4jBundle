@@ -4,7 +4,8 @@ namespace Innmind\Neo4jBundle;
 
 use Innmind\Neo4jBundle\DependencyInjection\Compiler\{
     RegisterEntityTranslatorsPass,
-    RegisterGeneratorsPass
+    RegisterGeneratorsPass,
+    RegisterEntityFactoriesPass
 };
 use Symfony\Component\{
     HttpKernel\Bundle\Bundle,
@@ -19,6 +20,7 @@ class InnmindNeo4jBundle extends Bundle
 
         $container
             ->addCompilerPass(new RegisterEntityTranslatorsPass)
-            ->addCompilerPass(new RegisterGeneratorsPass);
+            ->addCompilerPass(new RegisterGeneratorsPass)
+            ->addCompilerPass(new RegisterEntityFactoriesPass);
     }
 }

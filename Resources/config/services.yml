@@ -1,6 +1,8 @@
 parameters:
     innmind_neo4j.translator.result.aggregate.class: Innmind\Neo4j\ONM\Translation\Result\AggregateTranslator
     innmind_neo4j.translator.result.relationship.class: Innmind\Neo4j\ONM\Translation\Result\RelationshipTranslator
+    innmind_neo4j.entity_factory.aggregate.class: Innmind\Neo4j\ONM\EntityFactory\AggregateFactory
+    innmind_neo4j.entity_factory.relationship.class: Innmind\Neo4j\ONM\EntityFactory\RelationshipFactory
 
 services:
     innmind_neo4j.manager:
@@ -83,6 +85,20 @@ services:
     innmind_neo4j.entity_factory.resolver:
         class: Innmind\Neo4j\ONM\EntityFactory\Resolver
         public: false
+
+    innmind_neo4j.entity_factory.aggregate:
+        class: %innmind_neo4j.entity_factory.aggregate.class%
+        public: false
+        tags:
+            - { name: innmind_neo4j.entity_factory }
+
+    innmind_neo4j.entity_factory.relationship:
+        class: %innmind_neo4j.entity_factory.relationship.class%
+        arguments:
+            - '@innmind_neo4j.generators'
+        public: false
+        tags:
+            - { name: innmind_neo4j.entity_factory }
 
     innmind_neo4j.metadatas:
         class: Innmind\Neo4j\ONM\Metadatas
