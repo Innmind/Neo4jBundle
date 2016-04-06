@@ -13,7 +13,8 @@ use Innmind\Neo4j\ONM\Metadata\{
 };
 use Symfony\Component\DependencyInjection\{
     ContainerBuilder,
-    Reference
+    Reference,
+    Compiler\CompilerPassInterface
 };
 
 class RegisterEntityTranslatorsPassTest extends \PHPUnit_Framework_TestCase
@@ -22,7 +23,11 @@ class RegisterEntityTranslatorsPassTest extends \PHPUnit_Framework_TestCase
     {
         $c = new ContainerBuilder;
         (new InnmindNeo4jExtension)->load([], $c);
-        (new RegisterEntityTranslatorsPass)->process($c);
+        $this->assertSame(
+            null,
+            ($p = new RegisterEntityTranslatorsPass)->process($c)
+        );
+        $this->assertInstanceOf(CompilerPassInterface::class, $p);
 
         $def = $c->getDefinition('innmind_neo4j.translator.result');
         $arg = $def->getArgument(0);
