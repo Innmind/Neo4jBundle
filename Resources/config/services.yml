@@ -72,9 +72,11 @@ services:
     innmind_neo4j.translator.result:
         class: Innmind\Neo4j\ONM\Translation\ResultTranslator
         factory:
-            - Innmind\Neo4jBundle\Factory\ResultTranslatorFactory
+            - Innmind\Neo4jBundle\Factory\MapFactory
             - make
         arguments:
+            - Innmind\Neo4j\ONM\Translation\ResultTranslator
+            - Innmind\Neo4j\ONM\Translation\EntityTranslatorInterface
             - []
         public: false
 
