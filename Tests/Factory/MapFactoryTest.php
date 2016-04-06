@@ -8,7 +8,9 @@ use Innmind\Neo4j\ONM\Translation\{
     ResultTranslator,
     EntityTranslatorInterface,
     IdentityMatchTranslator,
-    IdentityMatchTranslatorInterface
+    IdentityMatchTranslatorInterface,
+    MatchTranslator,
+    MatchTranslatorInterface
 };
 
 class MapFactoryTest extends \PHPUnit_Framework_TestCase
@@ -37,5 +39,18 @@ class MapFactoryTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertInstanceOf(IdentityMatchTranslator::class, $r);
+    }
+
+    public function testMakeMatchTranslator()
+    {
+        $r = MapFactory::make(
+            MatchTranslator::class,
+            MatchTranslatorInterface::class,
+            [
+                'foo' => $this->getMock(MatchTranslatorInterface::class),
+            ]
+        );
+
+        $this->assertInstanceOf(MatchTranslator::class, $r);
     }
 }
