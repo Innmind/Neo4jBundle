@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\Neo4jBundle\Tests\DependencyInjection\Compiler;
 
 use Innmind\Neo4jBundle\DependencyInjection\{
-    Compiler\RegisterGeneratorsPass,
+    Compiler\RegistrableServicePass,
     InnmindNeo4jExtension
 };
 use Symfony\Component\DependencyInjection\{
@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\{
     Compiler\CompilerPassInterface
 };
 
-class RegisterGeneratorsPassTest extends \PHPUnit_Framework_TestCase
+class RegistrableServicePassTest extends \PHPUnit_Framework_TestCase
 {
     public function testProcess()
     {
@@ -27,7 +27,11 @@ class RegisterGeneratorsPassTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertSame(
             null,
-            ($p = new RegisterGeneratorsPass)->process($c)
+            ($p = new RegistrableServicePass(
+                'innmind_neo4j.generators',
+                'innmind_neo4j.identity.generator'
+            ))
+                ->process($c)
         );
         $this->assertInstanceOf(CompilerPassInterface::class, $p);
 
@@ -54,6 +58,10 @@ class RegisterGeneratorsPassTest extends \PHPUnit_Framework_TestCase
             (new Definition)
                 ->addTag('innmind_neo4j.identity.generator')
         );
-        (new RegisterGeneratorsPass)->process($c);
+        (new RegistrableServicePass(
+            'innmind_neo4j.generators',
+            'innmind_neo4j.identity.generator'
+        ))
+            ->process($c);
     }
 }

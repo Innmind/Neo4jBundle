@@ -4,7 +4,7 @@ namespace Innmind\Neo4jBundle;
 
 use Innmind\Neo4jBundle\DependencyInjection\Compiler\{
     RegisterTagMapPass,
-    RegisterGeneratorsPass,
+    RegistrableServicePass,
     RegisterEntityFactoriesPass
 };
 use Symfony\Component\{
@@ -23,7 +23,10 @@ class InnmindNeo4jBundle extends Bundle
                 'innmind_neo4j.translator.result',
                 'innmind_neo4j.translation.result'
             ))
-            ->addCompilerPass(new RegisterGeneratorsPass)
+            ->addCompilerPass(new RegistrableServicePass(
+                'innmind_neo4j.generators',
+                'innmind_neo4j.identity.generator'
+            ))
             ->addCompilerPass(new RegisterEntityFactoriesPass)
             ->addCompilerPass(new RegisterTagMapPass(
                 'innmind_neo4j.translator.identity_match',

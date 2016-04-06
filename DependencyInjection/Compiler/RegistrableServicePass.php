@@ -10,15 +10,24 @@ use Symfony\Component\DependencyInjection\{
     Reference
 };
 
-class RegisterGeneratorsPass implements CompilerPassInterface
+class RegistrableServicePass implements CompilerPassInterface
 {
+    private $service;
+    private $tag;
+
+    public function __construct(string $service, string $tag)
+    {
+        $this->service = $service;
+        $this->tag = $tag;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function process(ContainerBuilder $container)
     {
-        $definition = $container->getDefinition('innmind_neo4j.generators');
-        $ids = $container->findTaggedServiceIds('innmind_neo4j.identity.generator');
+        $definition = $container->getDefinition($this->service);
+        $ids = $container->findTaggedServiceIds($this->tag);
 
         foreach ($ids as $id => $tags) {
             foreach ($tags as $tag) {
