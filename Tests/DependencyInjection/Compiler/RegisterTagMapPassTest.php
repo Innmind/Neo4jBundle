@@ -71,6 +71,12 @@ class RegisterTagMapPassTest extends \PHPUnit_Framework_TestCase
                 'innmind_neo4j.translator.match.aggregate',
                 'innmind_neo4j.translator.match.relationship',
             ],
+            [
+                'innmind_neo4j.translator.specification',
+                'innmind_neo4j.translation.specification',
+                'innmind_neo4j.translator.specification.aggregate',
+                'innmind_neo4j.translator.specification.relationship',
+            ],
         ];
     }
 }

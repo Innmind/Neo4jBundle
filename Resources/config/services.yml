@@ -7,6 +7,8 @@ parameters:
     innmind_neo4j.translator.identity_match.relationship.class: Innmind\Neo4j\ONM\Translation\IdentityMatch\RelationshipTranslator
     innmind_neo4j.translator.match.aggregate.class: Innmind\Neo4j\ONM\Translation\Match\AggregateTranslator
     innmind_neo4j.translator.match.relationship.class: Innmind\Neo4j\ONM\Translation\Match\RelationshipTranslator
+    innmind_neo4j.translator.specification.aggregate.class: Innmind\Neo4j\ONM\Translation\Specification\AggregateTranslator
+    innmind_neo4j.translator.specification.relationship.class: Innmind\Neo4j\ONM\Translation\Specification\RelationshipTranslator
 
 services:
     innmind_neo4j.manager:
@@ -227,6 +229,29 @@ services:
         public: false
         tags:
             - { name: 'innmind_neo4j.translation.match', type: Innmind\Neo4j\ONM\Metadata\Relationship }
+
+    innmind_neo4j.translator.specification:
+        class: Innmind\Neo4j\ONM\Translation\SpecificationTranslator
+        factory:
+            - Innmind\Neo4jBundle\Factory\MapFactory
+            - make
+        arguments:
+            - Innmind\Neo4j\ONM\Translation\SpecificationTranslator
+            - Innmind\Neo4j\ONM\Translation\SpecificationTranslatorInterface
+            - []
+        public: false
+
+    innmind_neo4j.translator.specification.aggregate:
+        class: %innmind_neo4j.translator.specification.aggregate.class%
+        public: false
+        tags:
+            - { name: 'innmind_neo4j.translation.specification', type: Innmind\Neo4j\ONM\Metadata\Aggregate }
+
+    innmind_neo4j.translator.specification.relationship:
+        class: %innmind_neo4j.translator.specification.relationship.class%
+        public: false
+        tags:
+            - { name: 'innmind_neo4j.translation.specification', type: Innmind\Neo4j\ONM\Metadata\Relationship }
 
     innmind_neo4j.translator.result.aggregate:
         class: %innmind_neo4j.translator.result.aggregate.class%

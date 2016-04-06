@@ -10,7 +10,9 @@ use Innmind\Neo4j\ONM\Translation\{
     IdentityMatchTranslator,
     IdentityMatchTranslatorInterface,
     MatchTranslator,
-    MatchTranslatorInterface
+    MatchTranslatorInterface,
+    SpecificationTranslator,
+    SpecificationTranslatorInterface
 };
 
 class MapFactoryTest extends \PHPUnit_Framework_TestCase
@@ -47,6 +49,13 @@ class MapFactoryTest extends \PHPUnit_Framework_TestCase
                 MatchTranslatorInterface::class,
                 [
                     'foo' => $this->getMock(MatchTranslatorInterface::class),
+                ],
+            ],
+            [
+                SpecificationTranslator::class,
+                SpecificationTranslatorInterface::class,
+                [
+                    'foo' => $this->getMock(SpecificationTranslatorInterface::class),
                 ],
             ],
         ];
