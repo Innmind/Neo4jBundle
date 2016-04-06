@@ -10,15 +10,24 @@ use Symfony\Component\DependencyInjection\{
     Reference
 };
 
-class RegisterEntityTranslatorsPass implements CompilerPassInterface
+class RegisterTagMapPass implements CompilerPassInterface
 {
+    private $service;
+    private $tag;
+
+    public function __construct(string $service, string $tag)
+    {
+        $this->service = $service;
+        $this->tag = $tag;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function process(ContainerBuilder $container)
     {
-        $definition = $container->getDefinition('innmind_neo4j.translator.result');
-        $ids = $container->findTaggedServiceIds('innmind_neo4j.translation.result');
+        $definition = $container->getDefinition($this->service);
+        $ids = $container->findTaggedServiceIds($this->tag);
         $services = [];
 
         foreach ($ids as $id => $tags) {

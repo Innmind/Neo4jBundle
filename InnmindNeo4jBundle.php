@@ -3,7 +3,7 @@
 namespace Innmind\Neo4jBundle;
 
 use Innmind\Neo4jBundle\DependencyInjection\Compiler\{
-    RegisterEntityTranslatorsPass,
+    RegisterTagMapPass,
     RegisterGeneratorsPass,
     RegisterEntityFactoriesPass
 };
@@ -19,7 +19,10 @@ class InnmindNeo4jBundle extends Bundle
         parent::build($container);
 
         $container
-            ->addCompilerPass(new RegisterEntityTranslatorsPass)
+            ->addCompilerPass(new RegisterTagMapPass(
+                'innmind_neo4j.translator.result',
+                'innmind_neo4j.translation.result'
+            ))
             ->addCompilerPass(new RegisterGeneratorsPass)
             ->addCompilerPass(new RegisterEntityFactoriesPass);
     }

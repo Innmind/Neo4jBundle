@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\Neo4jBundle\Tests\DependencyInjection\Compiler;
 
 use Innmind\Neo4jBundle\DependencyInjection\{
-    Compiler\RegisterEntityTranslatorsPass,
+    Compiler\RegisterTagMapPass,
     InnmindNeo4jExtension
 };
 use Innmind\Neo4j\ONM\Metadata\{
@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\{
     Compiler\CompilerPassInterface
 };
 
-class RegisterEntityTranslatorsPassTest extends \PHPUnit_Framework_TestCase
+class RegisterTagMapPassTest extends \PHPUnit_Framework_TestCase
 {
     public function testProcess()
     {
@@ -25,7 +25,10 @@ class RegisterEntityTranslatorsPassTest extends \PHPUnit_Framework_TestCase
         (new InnmindNeo4jExtension)->load([], $c);
         $this->assertSame(
             null,
-            ($p = new RegisterEntityTranslatorsPass)->process($c)
+            ($p = new RegisterTagMapPass(
+                'innmind_neo4j.translator.result',
+                'innmind_neo4j.translation.result'
+            ))->process($c)
         );
         $this->assertInstanceOf(CompilerPassInterface::class, $p);
 
