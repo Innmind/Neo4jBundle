@@ -19,102 +19,58 @@ use Symfony\Component\DependencyInjection\{
 
 class RegisterTagMapPassTest extends \PHPUnit_Framework_TestCase
 {
-    public function testProcessTranslatorResult()
-    {
+    /**
+     * @dataProvider tags
+     */
+    public function testProcess(
+        string $service,
+        string $tag,
+        string $aggregate,
+        string $relationship
+    ) {
         $c = new ContainerBuilder;
         (new InnmindNeo4jExtension)->load([], $c);
         $this->assertSame(
             null,
-            ($p = new RegisterTagMapPass(
+            ($p = new RegisterTagMapPass($service, $tag))->process($c)
+        );
+        $this->assertInstanceOf(CompilerPassInterface::class, $p);
+
+        $def = $c->getDefinition($service);
+        $arg = $def->getArgument(0);
+
+        $this->assertSame(2, count($arg));
+        $this->assertSame(
+            [Aggregate::class, Relationship::class],
+            array_keys($arg)
+        );
+        $this->assertInstanceOf(Reference::class, $arg[Aggregate::class]);
+        $this->assertInstanceOf(Reference::class, $arg[Relationship::class]);
+        $this->assertSame($aggregate, (string) $arg[Aggregate::class]);
+        $this->assertSame($relationship, (string) $arg[Relationship::class]);
+    }
+
+    public function tags()
+    {
+        return [
+            [
                 'innmind_neo4j.translator.result',
-                'innmind_neo4j.translation.result'
-            ))->process($c)
-        );
-        $this->assertInstanceOf(CompilerPassInterface::class, $p);
-
-        $def = $c->getDefinition('innmind_neo4j.translator.result');
-        $arg = $def->getArgument(0);
-
-        $this->assertSame(2, count($arg));
-        $this->assertSame(
-            [Aggregate::class, Relationship::class],
-            array_keys($arg)
-        );
-        $this->assertInstanceOf(Reference::class, $arg[Aggregate::class]);
-        $this->assertInstanceOf(Reference::class, $arg[Relationship::class]);
-        $this->assertSame(
-            'innmind_neo4j.translator.result.aggregate',
-            (string) $arg[Aggregate::class]
-        );
-        $this->assertSame(
-            'innmind_neo4j.translator.result.relationship',
-            (string) $arg[Relationship::class]
-        );
-    }
-
-    public function testProcessTranslatorIdentityMatch()
-    {
-        $c = new ContainerBuilder;
-        (new InnmindNeo4jExtension)->load([], $c);
-        $this->assertSame(
-            null,
-            ($p = new RegisterTagMapPass(
+                'innmind_neo4j.translation.result',
+                'innmind_neo4j.translator.result.aggregate',
+                'innmind_neo4j.translator.result.relationship',
+            ],
+            [
                 'innmind_neo4j.translator.identity_match',
-                'innmind_neo4j.translation.identity_match'
-            ))->process($c)
-        );
-        $this->assertInstanceOf(CompilerPassInterface::class, $p);
-
-        $def = $c->getDefinition('innmind_neo4j.translator.identity_match');
-        $arg = $def->getArgument(0);
-
-        $this->assertSame(2, count($arg));
-        $this->assertSame(
-            [Aggregate::class, Relationship::class],
-            array_keys($arg)
-        );
-        $this->assertInstanceOf(Reference::class, $arg[Aggregate::class]);
-        $this->assertInstanceOf(Reference::class, $arg[Relationship::class]);
-        $this->assertSame(
-            'innmind_neo4j.translator.identity_match.aggregate',
-            (string) $arg[Aggregate::class]
-        );
-        $this->assertSame(
-            'innmind_neo4j.translator.identity_match.relationship',
-            (string) $arg[Relationship::class]
-        );
-    }
-
-    public function testProcessTranslatorMatch()
-    {
-        $c = new ContainerBuilder;
-        (new InnmindNeo4jExtension)->load([], $c);
-        $this->assertSame(
-            null,
-            ($p = new RegisterTagMapPass(
+                'innmind_neo4j.translation.identity_match',
+                'innmind_neo4j.translator.identity_match.aggregate',
+                'innmind_neo4j.translator.identity_match.relationship',
+            ],
+            [
                 'innmind_neo4j.translator.match',
-                'innmind_neo4j.translation.match'
-            ))->process($c)
-        );
-        $this->assertInstanceOf(CompilerPassInterface::class, $p);
-
-        $def = $c->getDefinition('innmind_neo4j.translator.match');
-        $arg = $def->getArgument(0);
-
-        $this->assertSame(2, count($arg));
-        $this->assertSame(
-            [Aggregate::class, Relationship::class],
-            array_keys($arg)
-        );
-        $this->assertInstanceOf(Reference::class, $arg[Aggregate::class]);
-        $this->assertInstanceOf(Reference::class, $arg[Relationship::class]);
-        $this->assertSame(
-            'innmind_neo4j.translator.match.aggregate',
-            (string) $arg[Aggregate::class]
-        );
-        $this->assertSame(
-            'innmind_neo4j.translator.match.relationship',
-            (string) $arg[Relationship::class]
-        );
+                'innmind_neo4j.translation.match',
+                'innmind_neo4j.translator.match.aggregate',
+                'innmind_neo4j.translator.match.relationship',
+            ],
+        ];
     }
 }
