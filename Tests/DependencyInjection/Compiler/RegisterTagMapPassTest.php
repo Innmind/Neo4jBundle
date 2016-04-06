@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\{
 
 class RegisterTagMapPassTest extends \PHPUnit_Framework_TestCase
 {
-    public function testProcess()
+    public function testProcessTranslatorResult()
     {
         $c = new ContainerBuilder;
         (new InnmindNeo4jExtension)->load([], $c);
@@ -48,6 +48,39 @@ class RegisterTagMapPassTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertSame(
             'innmind_neo4j.translator.result.relationship',
+            (string) $arg[Relationship::class]
+        );
+    }
+
+    public function testProcessTranslatorIdentityMatch()
+    {
+        $c = new ContainerBuilder;
+        (new InnmindNeo4jExtension)->load([], $c);
+        $this->assertSame(
+            null,
+            ($p = new RegisterTagMapPass(
+                'innmind_neo4j.translator.identity_match',
+                'innmind_neo4j.translation.identity_match'
+            ))->process($c)
+        );
+        $this->assertInstanceOf(CompilerPassInterface::class, $p);
+
+        $def = $c->getDefinition('innmind_neo4j.translator.identity_match');
+        $arg = $def->getArgument(0);
+
+        $this->assertSame(2, count($arg));
+        $this->assertSame(
+            [Aggregate::class, Relationship::class],
+            array_keys($arg)
+        );
+        $this->assertInstanceOf(Reference::class, $arg[Aggregate::class]);
+        $this->assertInstanceOf(Reference::class, $arg[Relationship::class]);
+        $this->assertSame(
+            'innmind_neo4j.translator.identity_match.aggregate',
+            (string) $arg[Aggregate::class]
+        );
+        $this->assertSame(
+            'innmind_neo4j.translator.identity_match.relationship',
             (string) $arg[Relationship::class]
         );
     }

@@ -24,6 +24,10 @@ class InnmindNeo4jBundle extends Bundle
                 'innmind_neo4j.translation.result'
             ))
             ->addCompilerPass(new RegisterGeneratorsPass)
-            ->addCompilerPass(new RegisterEntityFactoriesPass);
+            ->addCompilerPass(new RegisterEntityFactoriesPass)
+            ->addCompilerPass(new RegisterTagMapPass(
+                'innmind_neo4j.translator.identity_match',
+                'innmind_neo4j.translation.identity_match'
+            ));
     }
 }
