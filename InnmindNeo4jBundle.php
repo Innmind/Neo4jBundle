@@ -27,6 +27,10 @@ class InnmindNeo4jBundle extends Bundle
                 'innmind_neo4j.generators',
                 'innmind_neo4j.identity.generator'
             ))
+            ->addCompilerPass(new RegistrableServicePass(
+                'innmind_neo4j.repository_factory.configurator',
+                'innmind_neo4j.repository'
+            ))
             ->addCompilerPass(new RegisterEntityFactoriesPass)
             ->addCompilerPass(new RegisterTagMapPass(
                 'innmind_neo4j.translator.identity_match',
