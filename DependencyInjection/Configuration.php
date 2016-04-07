@@ -52,6 +52,10 @@ class Configuration implements ConfigurationInterface
                     ->info('The service name to use in the unit of work to persist the entity container')
                     ->defaultValue('innmind_neo4j.persister.delegation')
                 ->end()
+                ->scalarNode('metadata_configuration')
+                    ->info('The service to use to validate a metadata configuration')
+                    ->defaultValue('innmind_neo4j.metadata_builder.configuration')
+                ->end()
             ->end();
 
         return $treeBuilder;

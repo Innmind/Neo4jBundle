@@ -34,6 +34,7 @@ class InnmindNeo4jExtensionTest extends \PHPUnit_Framework_TestCase
                 ],
                 'types' => ['foo', 'bar'],
                 'persister' => 'another_service',
+                'metadata_configuration' => 'config',
             ],
         ];
 
@@ -77,6 +78,14 @@ class InnmindNeo4jExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('bar', $calls[1][1][0]);
     }
 
+    public function testMetadataConfiguration()
+    {
+        $def = $this->c->getDefinition('innmind_neo4j.metadata_builder');
+
+        $this->assertInstanceOf(Reference::class, $def->getArgument(2));
+        $this->assertSame('config', (string) $def->getArgument(2));
+    }
+
     public function testDefaultPersister()
     {
         $c = new ContainerBuilder;
@@ -117,5 +126,15 @@ class InnmindNeo4jExtensionTest extends \PHPUnit_Framework_TestCase
         $calls = $def->getMethodCalls();
 
         $this->assertSame(0, count($calls));
+    }
+
+    public function testDefaultMetadataConfiguration()
+    {
+        $c = new ContainerBuilder;
+        $this->e->load([], $c);
+        $def = $c->getDefinition('innmind_neo4j.metadata_builder');
+
+        $this->assertInstanceOf(Reference::class, $def->getArgument(2));
+        $this->assertSame('innmind_neo4j.metadata_builder.configuration', (string) $def->getArgument(2));
     }
 }

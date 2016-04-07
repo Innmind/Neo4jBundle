@@ -42,6 +42,10 @@ class InnmindNeo4jExtension extends Extension
             ->registerTypes(
                 $container,
                 $config['types']
+            )
+            ->injectMetadataConfiguration(
+                $container,
+                $config['metadata_configuration']
             );
     }
 
@@ -117,6 +121,25 @@ class InnmindNeo4jExtension extends Extension
         foreach ($types as $class) {
             $definition->addMethodCall('register', [$class]);
         }
+
+        return $this;
+    }
+
+    /**
+     * Inject the configuration object into the metadata builder
+     *
+     * @param ContainerBuilder $ontainer
+     * @param string $config
+     *
+     * @return self
+     */
+    private function injectMetadataConfiguration(
+        ContainerBuilder $container,
+        string $config
+    ): self {
+        $container
+            ->getDefinition('innmind_neo4j.metadata_builder')
+            ->replaceArgument(2, new Reference($config));
 
         return $this;
     }
