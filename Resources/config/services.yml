@@ -128,6 +128,10 @@ services:
             - ~
         public: false
 
+    innmind_neo4j.metadata_builder.configuration:
+        class: Innmind\Neo4j\ONM\Configuration
+        public: false
+
     innmind_neo4j.metadata_factory.aggregate:
         class: %innmind_neo4j.metadata_factory.aggregate.class%
         arguments:
