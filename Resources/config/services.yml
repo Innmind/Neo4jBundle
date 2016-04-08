@@ -216,6 +216,8 @@ services:
 
     innmind_neo4j.entity.data_extractor:
         class: Innmind\Neo4j\ONM\Entity\DataExtractor
+        arguments:
+            - '@innmind_neo4j.metadatas'
         public: false
 
     innmind_neo4j.repository_factory:
