@@ -1,0 +1,52 @@
+<?php
+declare(strict_types = 1);
+
+namespace Innmind\Neo4jBundle\Tests\EventListener;
+
+use Innmind\Neo4jBundle\EventListener\LoggerListener;
+use Innmind\Neo4j\DBAL\{
+    Events,
+    Event\PreQueryEvent,
+    Cypher
+};
+use Psr\Log\LoggerInterface;
+
+class LoggerListenerTest extends \PHPUnit_Framework_TestCase
+{
+    public function testLog()
+    {
+        $called = false;
+        $l = new LoggerListener(
+           $m = $this->getMock(LoggerInterface::class)
+        );
+        $m
+            ->method('info')
+            ->will($this->returnCallback(function($message, $context) use (&$called) {
+                $called = true;
+                $this->assertSame('Cypher query about to be executed', $message);
+                $this->assertSame('foo', $context['cypher']);
+                $this->assertSame(
+                    ['bar' => 'baz'],
+                    $context['parameters']
+                );
+            }));
+        $this->assertSame(
+            null,
+            $l->log(
+                new PreQueryEvent(
+                    (new Cypher('foo'))
+                        ->withParameter('bar', 'baz')
+                )
+            )
+        );
+        $this->assertTrue($called);
+    }
+
+    public function testGetSubscribedEvents()
+    {
+        $this->assertSame(
+            [Events::PRE_QUERY => 'log'],
+            LoggerListener::getSubscribedEvents()
+        );
+    }
+}

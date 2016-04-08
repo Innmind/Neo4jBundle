@@ -17,6 +17,7 @@ use Symfony\Component\{
     HttpKernel\Bundle\Bundle,
     EventDispatcher\EventDispatcher
 };
+use Psr\Log\NullLogger;
 
 class InnmindNeo4jBundleTest extends \PHPUnit_Framework_TestCase
 {
@@ -30,6 +31,10 @@ class InnmindNeo4jBundleTest extends \PHPUnit_Framework_TestCase
         $c->setDefinition(
             'event_dispatcher',
             new Definition(EventDispatcher::class)
+        );
+        $c->setDefinition(
+            'logger',
+            new Definition(NullLogger::class)
         );
         $c->setParameter(
             'kernel.bundles',

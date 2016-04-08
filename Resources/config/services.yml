@@ -294,3 +294,10 @@ services:
         public: false
         tags:
             - { name: 'innmind_neo4j.translation.result', type: Innmind\Neo4j\ONM\Metadata\Relationship }
+
+    innmind_neo4j.event_listener.logger:
+        class: Innmind\Neo4jBundle\EventListener\LoggerListener
+        arguments:
+            - '@logger'
+        tags:
+            - { name: 'monolog.logger', channel: innmind_neo4j }
