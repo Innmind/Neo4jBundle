@@ -177,8 +177,11 @@ services:
 
     innmind_neo4j.persister.delegation:
         class: Innmind\Neo4j\ONM\Persister\DelegationPersister
+        factory:
+            - Innmind\Neo4jBundle\Factory\DelegationPersisterFactory
+            - make
         arguments:
-            - ~
+            - ['@innmind_neo4j.persister.insert', '@innmind_neo4j.persister.update', '@innmind_neo4j.persister.remove']
         public: false
 
     innmind_neo4j.persister.insert:
