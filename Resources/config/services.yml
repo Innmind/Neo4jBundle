@@ -53,7 +53,7 @@ services:
     innmind_neo4j.connection.translator:
         class: Innmind\Neo4j\DBAL\Translator\HttpTranslator
         arguments:
-            - '@innmind_neo4j.transactions'
+            - '@innmind_neo4j.connection.transactions'
         public: false
 
     innmind_neo4j.connection.transactions:
