@@ -1,2 +1,5 @@
 Foo:
     type: aggregate
+    identity:
+        property: uuid
+        type: Innmind\Neo4j\ONM\Identity\Uuid

@@ -10,6 +10,7 @@ use Innmind\Neo4jBundle\{
     Tests\Fixture\BarBundle\BarBundle,
     Tests\Fixture\EmptyBundle\EmptyBundle
 };
+use Innmind\Neo4j\ONM\Identity\Uuid;
 use Symfony\Component\DependencyInjection\{
     ContainerBuilder,
     Compiler\CompilerPassInterface
@@ -45,11 +46,30 @@ class InjectEntityDefinitionsPassTest extends \PHPUnit_Framework_TestCase
                 [
                     'Foo' => [
                         'type' => 'aggregate',
+                        'identity' => [
+                            'property' => 'uuid',
+                            'type' => Uuid::class,
+                        ],
                     ],
                 ],
                 [
                     'Bar' => [
                         'type' => 'relationship',
+                        'identity' => [
+                            'property' => 'uuid',
+                            'type' => Uuid::class,
+                        ],
+                        'rel_type' => 'BAR',
+                        'startNode' => [
+                            'property' => 'start',
+                            'type' => Uuid::class,
+                            'target' => 'uuid',
+                        ],
+                        'endNode' => [
+                            'property' => 'end',
+                            'type' => Uuid::class,
+                            'target' => 'uuid',
+                        ],
                     ],
                 ],
             ],
