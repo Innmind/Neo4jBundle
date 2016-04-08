@@ -7,10 +7,6 @@ use Innmind\Neo4jBundle\DependencyInjection\{
     Compiler\RegisterMetadataFactoriesPass,
     InnmindNeo4jExtension
 };
-use Innmind\Neo4j\ONM\Metadata\{
-    Aggregate,
-    Relationship
-};
 use Symfony\Component\DependencyInjection\{
     ContainerBuilder,
     Reference,
@@ -34,18 +30,18 @@ class RegisterMetadataFactoriesPassTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame(2, count($arg));
         $this->assertSame(
-            [Aggregate::class, Relationship::class],
+            ['aggregate', 'relationship'],
             array_keys($arg)
         );
-        $this->assertInstanceOf(Reference::class, $arg[Aggregate::class]);
-        $this->assertInstanceOf(Reference::class, $arg[Relationship::class]);
+        $this->assertInstanceOf(Reference::class, $arg['aggregate']);
+        $this->assertInstanceOf(Reference::class, $arg['relationship']);
         $this->assertSame(
             'innmind_neo4j.metadata_factory.aggregate',
-            (string) $arg[Aggregate::class]
+            (string) $arg['aggregate']
         );
         $this->assertSame(
             'innmind_neo4j.metadata_factory.relationship',
-            (string) $arg[Relationship::class]
+            (string) $arg['relationship']
         );
     }
 }
