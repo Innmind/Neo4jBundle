@@ -6,7 +6,8 @@ use Innmind\Neo4jBundle\DependencyInjection\Compiler\{
     RegisterTagMapPass,
     RegistrableServicePass,
     RegisterEntityFactoriesPass,
-    RegisterMetadataFactoriesPass
+    RegisterMetadataFactoriesPass,
+    InjectEntityDefinitionsPass
 };
 use Symfony\Component\{
     HttpKernel\Bundle\Bundle,
@@ -45,6 +46,7 @@ class InnmindNeo4jBundle extends Bundle
                 'innmind_neo4j.translator.specification',
                 'innmind_neo4j.translation.specification'
             ))
-            ->addCompilerPass(new RegisterMetadataFactoriesPass);
+            ->addCompilerPass(new RegisterMetadataFactoriesPass)
+            ->addCompilerPass(new InjectEntityDefinitionsPass);
     }
 }
