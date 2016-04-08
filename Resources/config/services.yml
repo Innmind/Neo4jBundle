@@ -223,7 +223,7 @@ services:
             - configure
 
     innmind_neo4j.repository_factory.configurator:
-        class: Innmind\Neo4jBundle\RepositoryFactoryConfigurator
+        class: Innmind\Neo4jBundle\Configurator\RepositoryFactoryConfigurator
         arguments:
             - '@innmind_neo4j.metadatas'
         public: false

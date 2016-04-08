@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Innmind\Neo4jBundle;
+namespace Innmind\Neo4jBundle\Configurator;
 
 use Innmind\Neo4j\ONM\{
     Metadatas,

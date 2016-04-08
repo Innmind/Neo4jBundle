@@ -1,9 +1,9 @@
 <?php
 declare(strict_types = 1);
 
-namespace Innmind\Neo4jBundle\Tests;
+namespace Innmind\Neo4jBundle\Tests\Configurator;
 
-use Innmind\Neo4jBundle\RepositoryFactoryConfigurator;
+use Innmind\Neo4jBundle\Configurator\RepositoryFactoryConfigurator;
 use Innmind\Neo4j\ONM\{
     Metadata\ClassName,
     Metadata\Alias,
