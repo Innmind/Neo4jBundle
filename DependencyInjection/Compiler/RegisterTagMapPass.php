@@ -42,6 +42,6 @@ class RegisterTagMapPass implements CompilerPassInterface
             }
         }
 
-        $definition->replaceArgument(0, $services);
+        $definition->replaceArgument(2, $services);
     }
 }

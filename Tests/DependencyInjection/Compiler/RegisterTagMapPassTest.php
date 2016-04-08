@@ -37,7 +37,7 @@ class RegisterTagMapPassTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(CompilerPassInterface::class, $p);
 
         $def = $c->getDefinition($service);
-        $arg = $def->getArgument(0);
+        $arg = $def->getArgument(2);
 
         $this->assertSame(2, count($arg));
         $this->assertSame(
