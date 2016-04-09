@@ -128,7 +128,7 @@ class InnmindNeo4jExtension extends Extension
     /**
      * Inject the configuration object into the metadata builder
      *
-     * @param ContainerBuilder $ontainer
+     * @param ContainerBuilder $container
      * @param string $config
      *
      * @return self
