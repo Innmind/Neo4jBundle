@@ -1,18 +1,19 @@
 <?php
+declare(strict_types = 1);
 
 namespace Innmind\Neo4jBundle\DependencyInjection;
 
-use Innmind\Neo4j\ONM\EntityManagerFactory;
-use Innmind\Neo4j\ONM\EntityManager;
-use Innmind\Neo4j\ONM\Configuration as Conf;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Symfony\Component\DependencyInjection\Loader;
-use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\DependencyInjection\Parameter;
-use Symfony\Component\DependencyInjection\Alias;
+use Innmind\Neo4j\DBAL\{
+    Server,
+    Authentication
+};
+use Symfony\Component\{
+    DependencyInjection\ContainerBuilder,
+    Config\FileLocator,
+    HttpKernel\DependencyInjection\Extension,
+    DependencyInjection\Loader,
+    DependencyInjection\Reference
+};
 
 class InnmindNeo4jExtension extends Extension
 {
@@ -29,79 +30,117 @@ class InnmindNeo4jExtension extends Extension
         );
         $loader->load('services.yml');
 
-        foreach ($config['connections'] as $name => &$connection) {
-            if (
-                isset($connection['cluster']) &&
-                empty($connection['cluster'])
-            ) {
-                unset($connection['cluster']);
-            }
-        }
-
-        $defaultManager = null;
-
-        foreach ($config['managers'] as $name => $manager) {
-            if ($defaultManager === null) {
-                $defaultManager = $name;
-            }
-
-            $configDef = new Definition(
-                Conf::class,
-                [
-                    [
-                        'reader' => $manager['reader'],
-                        'cache' => sprintf(
-                            '%%kernel.cache_dir%%/innmind/neo4j/%s',
-                            $name
-                        ),
-                        'locations' => $manager['bundles'],
-                    ],
-                    new Parameter('kernel.debug'),
-                ]
+        $this
+            ->injectPersister(
+                $container,
+                $config['persister']
+            )
+            ->configureConnection(
+                $container,
+                $config['connection']
+            )
+            ->registerTypes(
+                $container,
+                $config['types']
+            )
+            ->injectMetadataConfiguration(
+                $container,
+                $config['metadata_configuration']
             );
-            $configDef
-                ->setFactory([Conf::class, 'create'])
-                ->setPublic(false)
-                ->addTag('innmind_neo4j.config');
+    }
 
-            $def = new Definition(
-                EntityManager::class,
-                [
-                    $config['connections'][$manager['connection']],
-                    new Reference(sprintf(
-                        'innmind_neo4j.config.%s',
-                        $name
-                    )),
-                    new Reference('event_dispatcher'),
-                ]
-            );
-            $def
-                ->setFactory([EntityManagerFactory::class, 'make'])
-                ->addTag('innmind_neo4j.manager', ['alias' => $name]);
-
-            $container->setDefinition(
-                sprintf('innmind_neo4j.config.%s', $name),
-                $configDef
-            );
-            $container->setDefinition(
-                sprintf('innmind_neo4j.manager.%s', $name),
-                $def
-            );
-        }
-
+    /**
+     * Inject the defined service in the unit of work
+     *
+     * @param ContainerBuilder $container
+     * @param string $service
+     *
+     * @return self
+     */
+    private function injectPersister(
+        ContainerBuilder $container,
+        string $service
+    ): self {
         $container
-            ->getDefinition('innmind_neo4j.registry')
-            ->addMethodCall('setDefaultManager', [$defaultManager]);
+            ->getDefinition('innmind_neo4j.unit_of_work')
+            ->replaceArgument(5, new Reference($service));
 
-        if ($config['disable_aliases'] === false) {
-            $container->setAlias(
-                'neo4j',
-                new Alias('innmind_neo4j.registry')
-            );
-            $container->setAlias(
-                'graph',
-                new Alias('innmind_neo4j.registry')
-            );
+        return $this;
+    }
+
+    /**
+     * Inject value objects to make the connection work
+     *
+     * @param ContainerBuilder $container
+     * @param array $config
+     *
+     * @return self
+     */
+    private function configureConnection(
+        ContainerBuilder $container,
+        array $config
+    ): self {
+        $transactions = $container->getDefinition('innmind_neo4j.connection.transactions');
+        $transport = $container->getDefinition('innmind_neo4j.connection.transport');
+        $server = new Server(
+            $config['scheme'],
+            $config['host'],
+            $config['port']
+        );
+        $auth = new Authentication(
+            $config['user'],
+            $config['password']
+        );
+
+        $transactions
+            ->replaceArgument(0, $server)
+            ->replaceArgument(1, $auth)
+            ->replaceArgument(2, $config['timeout']);
+        $transport
+            ->replaceArgument(2, $server)
+            ->replaceArgument(3, $auth)
+            ->replaceArgument(4, $config['timeout']);
+
+        return $this;
+    }
+
+    /**
+     * Register the classes as added property types
+     *
+     * @param ContainerBuilder $container
+     * @param array $types
+     *
+     * @return self
+     */
+    private function registerTypes(
+        ContainerBuilder $container,
+        array $types
+    ): self {
+        $definition = $container->getDefinition('innmind_neo4j.types');
+
+        foreach ($types as $class) {
+            $definition->addMethodCall('register', [$class]);
         }
+
+        return $this;
+    }
+
+    /**
+     * Inject the configuration object into the metadata builder
+     *
+     * @param ContainerBuilder $container
+     * @param string $config
+     *
+     * @return self
+     */
+    private function injectMetadataConfiguration(
+        ContainerBuilder $container,
+        string $config
+    ): self {
+        $container
+            ->getDefinition('innmind_neo4j.metadata_builder')
+            ->replaceArgument(2, new Reference($config));
+
+        return $this;
     }
 }

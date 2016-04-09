@@ -1,161 +1,140 @@
 <?php
+declare(strict_types = 1);
 
 namespace Innmind\Neo4jBundle\Tests\DependencyInjection;
 
 use Innmind\Neo4jBundle\DependencyInjection\InnmindNeo4jExtension;
-use Innmind\Neo4jBundle\DependencyInjection\Configuration;
-use Innmind\Neo4j\ONM\EntityManagerFactory;
-use Innmind\Neo4j\ONM\Configuration as Conf;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Innmind\Neo4j\DBAL\{
+    Server,
+    Authentication
+};
+use Symfony\Component\DependencyInjection\{
+    ContainerBuilder,
+    Reference
+};
 
 class InnmindNeo4jExtensionTest extends \PHPUnit_Framework_TestCase
 {
-    protected $extension;
-    protected $container;
-    protected $config;
+    private $c;
+    private $e;
 
     public function setUp()
     {
-        $this->container = new ContainerBuilder;
-        $this->extension = new InnmindNeo4jExtension;
-        $this->config = [
+        $this->c = new ContainerBuilder;
+        $this->e = new InnmindNeo4jExtension;
+        $config = [
             'innmind_neo4j' => [
-                'connections' => [
-                    'default' => [
-                        'username' => 'neo4j',
-                        'password' => 'neo4j',
-                    ],
-                    'cluster_conn' => [
-                        'cluster' => [
-                            'a' => [
-                                'username' => 'foo',
-                                'password' => 'foo',
-                            ],
-                        ],
-                    ],
+                'connection' => [
+                    'scheme' => 'http',
+                    'host' => 'docker',
+                    'port' => 1337,
+                    'timeout' => 42,
+                    'user' => 'neo4j',
+                    'password' => 'ci',
                 ],
-                'managers' => [
-                    'default' => [
-                        'reader' => 'yaml',
-                        'connection' => 'default',
-                    ],
-                ],
+                'types' => ['foo', 'bar'],
+                'persister' => 'another_service',
+                'metadata_configuration' => 'config',
             ],
         ];
-        $this->extension->load($this->config, $this->container);
+
+        $this->e->load($config, $this->c);
     }
 
-    public function testManagersAreDefined()
+    public function testPersister()
     {
-        $defs = $this->container->findTaggedServiceIds('innmind_neo4j.manager');
+        $def = $this->c->getDefinition('innmind_neo4j.unit_of_work');
 
-        $this->assertSame(1, count($defs));
+        $this->assertInstanceOf(Reference::class, $def->getArgument(5));
+        $this->assertSame('another_service', (string) $def->getArgument(5));
     }
 
-    public function testManagerDefinition()
+    public function testConnection()
     {
-        $def = $this->container->getDefinition('innmind_neo4j.manager.default');
+        $def = $this->c->getDefinition('innmind_neo4j.connection.transactions');
 
-        $args = $def->getArguments();
+        $this->assertInstanceOf(Server::class, $def->getArgument(0));
+        $this->assertSame('http://docker:1337/', (string) $def->getArgument(0));
+        $this->assertInstanceOf(Authentication::class, $def->getArgument(1));
+        $this->assertSame('neo4j', $def->getArgument(1)->user());
+        $this->assertSame('ci', $def->getArgument(1)->password());
+        $this->assertSame(42, $def->getArgument(2));
 
-        $this->assertSame(
-            [
-                'username' => 'neo4j',
-                'password' => 'neo4j',
-                'scheme' => 'http',
-                'host' => 'localhost',
-                'port' => 7474,
-                'timeout' => 60,
-            ],
-            $args[0]
-        );
-        $this->assertSame(
-            'innmind_neo4j.config.default',
-            (string) $args[1]
-        );
-        $this->assertSame(
-            'event_dispatcher',
-            (string) $args[2]
-        );
-        $this->assertSame(
-            EntityManagerFactory::class,
-            $def->getFactory()[0]
-        );
-        $this->assertSame(
-            'make',
-            $def->getFactory()[1]
-        );
-        $this->assertSame(
-            [
-                'innmind_neo4j.manager' => [[
-                    'alias' => 'default',
-                ]],
-            ],
-            $def->getTags()
-        );
+        $transport = $this->c->getDefinition('innmind_neo4j.connection.transport');
+        $this->assertSame($def->getArgument(0), $transport->getArgument(2));
+        $this->assertSame($def->getArgument(1), $transport->getArgument(3));
+        $this->assertSame(42, $transport->getArgument(4));
     }
 
-    public function testConfigDefinition()
+    public function testTypes()
     {
-        $def = $this->container->getDefinition('innmind_neo4j.config.default');
+        $def = $this->c->getDefinition('innmind_neo4j.types');
+        $calls = $def->getMethodCalls();
 
-        $args = $def->getArguments();
+        $this->assertSame(2, count($calls));
+        $this->assertSame('register', $calls[0][0]);
+        $this->assertSame('foo', $calls[0][1][0]);
+        $this->assertSame('register', $calls[1][0]);
+        $this->assertSame('bar', $calls[1][1][0]);
+    }
 
+    public function testMetadataConfiguration()
+    {
+        $def = $this->c->getDefinition('innmind_neo4j.metadata_builder');
+
+        $this->assertInstanceOf(Reference::class, $def->getArgument(2));
+        $this->assertSame('config', (string) $def->getArgument(2));
+    }
+
+    public function testDefaultPersister()
+    {
+        $c = new ContainerBuilder;
+        $this->e->load([], $c);
+        $def = $c->getDefinition('innmind_neo4j.unit_of_work');
+
+        $this->assertInstanceOf(Reference::class, $def->getArgument(5));
         $this->assertSame(
-            [
-                'reader' => 'yaml',
-                'cache' => '%kernel.cache_dir%/innmind/neo4j/default',
-                'locations' => [],
-            ],
-            $args[0]
-        );
-        $this->assertSame(
-            'kernel.debug',
-            (string) $args[1]
-        );
-        $this->assertFalse($def->isPublic());
-        $this->assertSame(
-            Conf::class,
-            $def->getFactory()[0]
-        );
-        $this->assertSame(
-            'create',
-            $def->getFactory()[1]
-        );
-        $this->assertSame(
-            [
-                'innmind_neo4j.config' => [[]],
-            ],
-            $def->getTags()
+            'innmind_neo4j.persister.delegation',
+            (string) $def->getArgument(5)
         );
     }
 
-    public function testRegistryDefintion()
+    public function testDefaultConnection()
     {
-        $def = $this->container->getDefinition('innmind_neo4j.registry');
+        $c = new ContainerBuilder;
+        $this->e->load([], $c);
+        $def = $c->getDefinition('innmind_neo4j.connection.transactions');
 
-        $this->assertSame(
-            [[
-                'setDefaultManager', ['default']
-            ]],
-            $def->getMethodCalls()
-        );
+        $this->assertInstanceOf(Server::class, $def->getArgument(0));
+        $this->assertSame('https://localhost:7474/', (string) $def->getArgument(0));
+        $this->assertInstanceOf(Authentication::class, $def->getArgument(1));
+        $this->assertSame('neo4j', $def->getArgument(1)->user());
+        $this->assertSame('neo4j', $def->getArgument(1)->password());
+        $this->assertSame(60, $def->getArgument(2));
+
+        $transport = $c->getDefinition('innmind_neo4j.connection.transport');
+        $this->assertSame($def->getArgument(0), $transport->getArgument(2));
+        $this->assertSame($def->getArgument(1), $transport->getArgument(3));
+        $this->assertSame(60, $transport->getArgument(4));
     }
 
-    public function testAliasesAreSet()
+    public function testDefaultTypes()
     {
-        $this->assertTrue($this->container->hasAlias('neo4j'));
-        $this->assertTrue($this->container->hasAlias('graph'));
+        $c = new ContainerBuilder;
+        $this->e->load([], $c);
+        $def = $c->getDefinition('innmind_neo4j.types');
+        $calls = $def->getMethodCalls();
+
+        $this->assertSame(0, count($calls));
     }
 
-    public function testAliasesAreNotSet()
+    public function testDefaultMetadataConfiguration()
     {
-        $this->config['innmind_neo4j']['disable_aliases'] = true;
-        $container = new ContainerBuilder;
-        $this->extension->load($this->config, $container);
+        $c = new ContainerBuilder;
+        $this->e->load([], $c);
+        $def = $c->getDefinition('innmind_neo4j.metadata_builder');
 
-        $this->assertFalse($container->hasAlias('neo4j'));
-        $this->assertFalse($container->hasAlias('graph'));
-
+        $this->assertInstanceOf(Reference::class, $def->getArgument(2));
+        $this->assertSame('innmind_neo4j.metadata_builder.configuration', (string) $def->getArgument(2));
     }
 }
