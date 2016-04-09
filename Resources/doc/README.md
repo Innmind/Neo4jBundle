@@ -38,62 +38,32 @@ Finally add the bundle configuration in the appropriate `config` file (ie: `app/
 
 ```yaml
 innmind_neo4j:
-    connections:
-        my_conn:
-            scheme: http        # optional
-            host: localhost     # optional
-            port: 7474          # optional
-            timeout: 60         # optional
-            username: neo4j
-            password: neo4j
-    managers:
-        my_manager:
-            connection: my_conn
-            reader: yaml
-            bundles: []         #optional
-    default_manager: my_manager # default to : default
-    disbale_aliases: false      # optional
+    connection:
+        scheme: http        # optional
+        host: localhost     # optional
+        port: 7474          # optional
+        timeout: 60         # optional
+        username: neo4j     # optional
+        password: neo4j     # optional
+    types: []               # optional, Classes implementing Innmind\Neo4j\ONM\TypeInterface
+    persister: innmind_neo4j.persister.delegation # optional, The service name to use in the unit of work to persist the entity container
+    metadata_configuration: innmind_neo4j.metadata_builder.configuration # optional, The service to use to validate a metadata configuration
 ```
 
 ## Configuration
 
 Once the bundle is installed you need to start configuring your entities. In each of your bundles where you want to create your entities, you need to create the file `neo4j.yml` (or file in a folder named `neo4j`) inside the folder `Resources/config`.
 
-Each configuration file must follow the structure described in the [ONM library](https://github.com/Innmind/neo4j-onm/blob/master/docs/README.md#configuration).
+Each configuration file must follow the structure described in the [ONM library](https://github.com/Innmind/neo4j-onm/blob/master/README.md#configuration).
 
-### Advanced
+## Usage
 
-In case you want to use different manager per bundle, you need to specify the list of bundles the manager will handle. I.e:
-
-```yaml
-innmin_neo4j:
-    managers:
-        my_manager:
-            ...
-            bundles: [AcmeFooBundle]
-```
-
-The above `my_manager` will only handle entities from the `AcmeFooBundle`, in the `bundles` array you always need to use the bundle short naming used by Symfony.
-
-## Behaviour
-
-Once the bundle and entities configuration done, you can now access the managers via different services.
-
-To access the registry of managers, retrieve the service `innmind_neo4j.registry` (aliased by `neo4j` or `graph`). Then you can access each manager declared via the method `getManager`.
+Once the bundle and entities configuration are done, you can now access the manager via different the service `innmind_neo4j.manager`.
 
 Example:
 ```php
-$registry = $container->get('innmind_neo4j.registry');
-$defaultManager = $registry->getManager();
-$anotherManager = $registry->getManager('another_manager');
+$manager = $container->get('innmind_neo4j.registry');
+$repository = $manager->repository(MyEntity::class);
 ```
 
-**Note**: aliases can be disabled via the bundle configuration key `disable_aliases`.
-
-To see what you can do with a manager, please refer to the [ONM library](https://github.com/Innmind/neo4j-onm/blob/master/docs/README.md#entity-manipulation).
-
-If you want to inject a manager inside another service, you can directly access them via a service name following this pattern: `innmind_neo4j.manager.{manager name}`. For the example used above, you would have the following services: `innmind_neo4j.manager.default` and `innmind_neo4j.manager.another_manager`.
-
-## Commands
-
-This bundle also provides a command `neo4j:generate:entities` to generate the PHP code corresponding to the entities you have configured. It will generate both entities and repositories; in case an entity file already exists, it will move the old file by appending `~` to its filename and generate a new one (repositories are not overriden).
+For complete understanding of what you can do please refer to the [ONM documentation](https://github.com/Innmind/neo4j-onm/blob/master/README.md#documentation).

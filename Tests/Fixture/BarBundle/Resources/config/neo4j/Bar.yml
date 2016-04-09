@@ -1,0 +1,14 @@
+Bar:
+    type: relationship
+    identity:
+        property: uuid
+        type: Innmind\Neo4j\ONM\Identity\Uuid
+    rel_type: BAR
+    startNode:
+        property: start
+        type: Innmind\Neo4j\ONM\Identity\Uuid
+        target: uuid
+    endNode:
+        property: end
+        type: Innmind\Neo4j\ONM\Identity\Uuid
+        target: uuid
