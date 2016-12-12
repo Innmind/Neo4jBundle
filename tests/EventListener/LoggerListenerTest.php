@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Innmind\Neo4jBundle\Tests\EventListener;
+namespace Tests\Innmind\Neo4jBundle\EventListener;
 
 use Innmind\Neo4jBundle\EventListener\LoggerListener;
 use Innmind\Neo4j\DBAL\{

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Innmind\Neo4jBundle\Tests\Factory;
+namespace Tests\Innmind\Neo4jBundle\Factory;
 
 use Innmind\Neo4jBundle\Factory\DelegationPersisterFactory;
 use Innmind\Neo4j\ONM\{

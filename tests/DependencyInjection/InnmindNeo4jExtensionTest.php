@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Innmind\Neo4jBundle\Tests\DependencyInjection;
+namespace Tests\Innmind\Neo4jBundle\DependencyInjection;
 
 use Innmind\Neo4jBundle\DependencyInjection\InnmindNeo4jExtension;
 use Innmind\Neo4j\DBAL\{

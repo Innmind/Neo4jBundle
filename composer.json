@@ -25,9 +25,13 @@
         "symfony/yaml": "~3.0"
     },
     "autoload": {
-        "psr-0": {
-            "Innmind\\Neo4jBundle": ""
+        "psr-4": {
+            "Innmind\\Neo4jBundle\\": "src/"
         }
     },
-    "target-dir": "Innmind/Neo4jBundle"
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\Innmind\\Neo4jBundle\\": "tests"
+        }
+    }
 }

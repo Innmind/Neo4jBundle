@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Innmind\Neo4jBundle\Tests\Configurator;
+namespace Tests\Innmind\Neo4jBundle\Configurator;
 
 use Innmind\Neo4jBundle\Configurator\RepositoryFactoryConfigurator;
 use Innmind\Neo4j\ONM\{
