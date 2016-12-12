@@ -51,18 +51,19 @@ class InnmindNeo4jExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testConnection()
     {
-        $def = $this->c->getDefinition('innmind_neo4j.connection.transactions');
+        $def = $this->c->getDefinition('innmind_neo4j.connection.server');
+        $this->assertSame('http', $def->getArgument(0));
+        $this->assertSame('docker', $def->getArgument(1));
+        $this->assertSame(1337, $def->getArgument(2));
 
-        $this->assertInstanceOf(Server::class, $def->getArgument(0));
-        $this->assertSame('http://docker:1337/', (string) $def->getArgument(0));
-        $this->assertInstanceOf(Authentication::class, $def->getArgument(1));
-        $this->assertSame('neo4j', $def->getArgument(1)->user());
-        $this->assertSame('ci', $def->getArgument(1)->password());
+        $def = $this->c->getDefinition('innmind_neo4j.connection.authentication');
+        $this->assertSame('neo4j', $def->getArgument(0));
+        $this->assertSame('ci', $def->getArgument(1));
+
+        $def = $this->c->getDefinition('innmind_neo4j.connection.transactions');
         $this->assertSame(42, $def->getArgument(2));
 
         $transport = $this->c->getDefinition('innmind_neo4j.connection.transport');
-        $this->assertSame($def->getArgument(0), $transport->getArgument(2));
-        $this->assertSame($def->getArgument(1), $transport->getArgument(3));
         $this->assertSame(42, $transport->getArgument(4));
     }
 
@@ -103,18 +104,20 @@ class InnmindNeo4jExtensionTest extends \PHPUnit_Framework_TestCase
     {
         $c = new ContainerBuilder;
         $this->e->load([], $c);
-        $def = $c->getDefinition('innmind_neo4j.connection.transactions');
 
-        $this->assertInstanceOf(Server::class, $def->getArgument(0));
-        $this->assertSame('https://localhost:7474/', (string) $def->getArgument(0));
-        $this->assertInstanceOf(Authentication::class, $def->getArgument(1));
-        $this->assertSame('neo4j', $def->getArgument(1)->user());
-        $this->assertSame('neo4j', $def->getArgument(1)->password());
+        $def = $this->c->getDefinition('innmind_neo4j.connection.server');
+        $this->assertSame('http', $def->getArgument(0));
+        $this->assertSame('docker', $def->getArgument(1));
+        $this->assertSame(1337, $def->getArgument(2));
+
+        $def = $this->c->getDefinition('innmind_neo4j.connection.authentication');
+        $this->assertSame('neo4j', $def->getArgument(0));
+        $this->assertSame('ci', $def->getArgument(1));
+
+        $def = $c->getDefinition('innmind_neo4j.connection.transactions');
         $this->assertSame(60, $def->getArgument(2));
 
         $transport = $c->getDefinition('innmind_neo4j.connection.transport');
-        $this->assertSame($def->getArgument(0), $transport->getArgument(2));
-        $this->assertSame($def->getArgument(1), $transport->getArgument(3));
         $this->assertSame(60, $transport->getArgument(4));
     }
 

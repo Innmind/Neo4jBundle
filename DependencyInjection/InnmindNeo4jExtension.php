@@ -3,10 +3,6 @@ declare(strict_types = 1);
 
 namespace Innmind\Neo4jBundle\DependencyInjection;
 
-use Innmind\Neo4j\DBAL\{
-    Server,
-    Authentication
-};
 use Symfony\Component\{
     DependencyInjection\ContainerBuilder,
     Config\FileLocator,
@@ -82,23 +78,19 @@ class InnmindNeo4jExtension extends Extension
     ): self {
         $transactions = $container->getDefinition('innmind_neo4j.connection.transactions');
         $transport = $container->getDefinition('innmind_neo4j.connection.transport');
-        $server = new Server(
-            $config['scheme'],
-            $config['host'],
-            $config['port']
-        );
-        $auth = new Authentication(
-            $config['user'],
-            $config['password']
-        );
+        $server = $container->getDefinition('innmind_neo4j.connection.server');
+        $authentication = $container->getDefinition('innmind_neo4j.connection.authentication');
 
+        $server
+            ->replaceArgument(0, $config['scheme'])
+            ->replaceArgument(1, $config['host'])
+            ->replaceArgument(2, $config['port']);
+        $authentication
+            ->replaceArgument(0, $config['user'])
+            ->replaceArgument(1, $config['password']);
         $transactions
-            ->replaceArgument(0, $server)
-            ->replaceArgument(1, $auth)
             ->replaceArgument(2, $config['timeout']);
         $transport
-            ->replaceArgument(2, $server)
-            ->replaceArgument(3, $auth)
             ->replaceArgument(4, $config['timeout']);
 
         return $this;

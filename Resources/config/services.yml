@@ -45,8 +45,8 @@ services:
         arguments:
             - '@innmind_neo4j.connection.translator'
             - '@event_dispatcher'
-            - ~
-            - ~
+            - '@innmind_neo4j.connection.server'
+            - '@innmind_neo4j.connection.authentication'
             - ~
         public: false
 
@@ -59,7 +59,22 @@ services:
     innmind_neo4j.connection.transactions:
         class: Innmind\Neo4j\DBAL\Transactions
         arguments:
+            - '@innmind_neo4j.connection.server'
+            - '@innmind_neo4j.connection.authentication'
             - ~
+        public: false
+
+    innmind_neo4j.connection.server:
+        class: Innmind\Neo4j\DBAL\Server
+        arguments:
+            - ~
+            - ~
+            - ~
+        public: false
+
+    innmind_neo4j.connection.authentication:
+        class: Innmind\Neo4j\DBAL\Authentication
+        arguments:
             - ~
             - ~
         public: false
