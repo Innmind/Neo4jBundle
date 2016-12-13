@@ -14,7 +14,7 @@ class DelegationPersisterFactoryTest extends \PHPUnit_Framework_TestCase
     public function testMake()
     {
         $p = DelegationPersisterFactory::make([
-            $this->getMock(PersisterInterface::class)
+            $this->createMock(PersisterInterface::class)
         ]);
 
         $this->assertInstanceOf(DelegationPersister::class, $p);

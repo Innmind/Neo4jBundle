@@ -17,7 +17,7 @@ class LoggerListenerTest extends \PHPUnit_Framework_TestCase
     {
         $called = false;
         $l = new LoggerListener(
-           $m = $this->getMock(LoggerInterface::class)
+           $m = $this->createMock(LoggerInterface::class)
         );
         $m
             ->method('info')
