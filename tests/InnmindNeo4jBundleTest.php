@@ -1,14 +1,16 @@
 <?php
 declare(strict_types = 1);
 
-namespace Innmind\Neo4jBundle\Tests;
+namespace Tests\Innmind\Neo4jBundle;
 
 use Innmind\Neo4jBundle\{
     InnmindNeo4jBundle,
-    DependencyInjection\InnmindNeo4jExtension,
-    Tests\Fixture\FooBundle\FooBundle,
-    Tests\Fixture\BarBundle\BarBundle,
-    Tests\Fixture\EmptyBundle\EmptyBundle
+    DependencyInjection\InnmindNeo4jExtension
+};
+use Tests\Innmind\Neo4jBundle\{
+    Fixture\FooBundle\FooBundle,
+    Fixture\BarBundle\BarBundle,
+    Fixture\EmptyBundle\EmptyBundle
 };
 use Innmind\Neo4j\ONM\ManagerInterface;
 use Symfony\Component\{

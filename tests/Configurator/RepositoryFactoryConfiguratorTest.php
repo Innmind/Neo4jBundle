@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Innmind\Neo4jBundle\Tests\Configurator;
+namespace Tests\Innmind\Neo4jBundle\Configurator;
 
 use Innmind\Neo4jBundle\Configurator\RepositoryFactoryConfigurator;
 use Innmind\Neo4j\ONM\{
@@ -20,7 +20,7 @@ class RepositoryFactoryConfiguratorTest extends \PHPUnit_Framework_TestCase
 {
     public function testConfigure()
     {
-        $entity = $this->getMock(EntityInterface::class);
+        $entity = $this->createMock(EntityInterface::class);
         $entity
             ->method('class')
             ->willReturn(new ClassName('foo'));
@@ -30,7 +30,7 @@ class RepositoryFactoryConfiguratorTest extends \PHPUnit_Framework_TestCase
         $m = new Metadatas;
         $m->register($entity);
         $c = new RepositoryFactoryConfigurator($m);
-        $c->register('foo', $r = $this->getMock(RepositoryInterface::class));
+        $c->register('foo', $r = $this->createMock(RepositoryInterface::class));
         $f = new RepositoryFactory(
             $this
                 ->getMockBuilder(UnitOfWork::class)

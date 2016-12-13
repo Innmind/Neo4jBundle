@@ -42,6 +42,10 @@ class InnmindNeo4jExtension extends Extension
             ->injectMetadataConfiguration(
                 $container,
                 $config['metadata_configuration']
+            )
+            ->configureGenerators(
+                $container,
+                $config['identity_generators']
             );
     }
 
@@ -132,6 +136,22 @@ class InnmindNeo4jExtension extends Extension
         $container
             ->getDefinition('innmind_neo4j.metadata_builder')
             ->replaceArgument(2, new Reference($config));
+
+        return $this;
+    }
+
+    private function configureGenerators(
+        ContainerBuilder $container,
+        array $generators
+    ): self {
+        $definition = $container->getDefinition('innmind_neo4j.generators');
+
+        foreach ($generators as $class => $generator) {
+            $definition->addMethodCall(
+                'register',
+                [$class, new Reference($generator)]
+            );
+        }
 
         return $this;
     }

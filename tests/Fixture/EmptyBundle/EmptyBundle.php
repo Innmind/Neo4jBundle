@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Innmind\Neo4jBundle\Tests\Fixture\EmptyBundle;
+namespace Tests\Innmind\Neo4jBundle\Fixture\EmptyBundle;
 
 class EmptyBundle
 {

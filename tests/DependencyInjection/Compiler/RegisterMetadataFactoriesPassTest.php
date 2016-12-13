@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Innmind\Neo4jBundle\Tests\DependencyInjection\Compiler;
+namespace Tests\Innmind\Neo4jBundle\DependencyInjection\Compiler;
 
 use Innmind\Neo4jBundle\DependencyInjection\{
     Compiler\RegisterMetadataFactoriesPass,

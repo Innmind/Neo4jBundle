@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Innmind\Neo4jBundle\Tests\DependencyInjection;
+namespace Tests\Innmind\Neo4jBundle\DependencyInjection;
 
 use Innmind\Neo4jBundle\DependencyInjection\InnmindNeo4jExtension;
 use Innmind\Neo4j\DBAL\{
@@ -33,6 +33,10 @@ class InnmindNeo4jExtensionTest extends \PHPUnit_Framework_TestCase
                     'password' => 'ci',
                 ],
                 'types' => ['foo', 'bar'],
+                'identity_generators' => [
+                    'Some\Class' => 'service.name',
+                    'Some\Other\Class' => 'other.service.name',
+                ],
                 'persister' => 'another_service',
                 'metadata_configuration' => 'config',
             ],
@@ -139,5 +143,31 @@ class InnmindNeo4jExtensionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf(Reference::class, $def->getArgument(2));
         $this->assertSame('innmind_neo4j.metadata_builder.configuration', (string) $def->getArgument(2));
+    }
+
+    public function testRegisterGenerators()
+    {
+        $definition = $this->c->getDefinition('innmind_neo4j.generators');
+
+        $calls = $definition->getMethodCalls();
+        $this->assertCount(2, $calls);
+        $this->assertSame('register', $calls[0][0]);
+        $this->assertSame('Some\Class', $calls[0][1][0]);
+        $this->assertInstanceOf(Reference::class, $calls[0][1][1]);
+        $this->assertSame('service.name', (string) $calls[0][1][1]);
+        $this->assertSame('register', $calls[1][0]);
+        $this->assertSame('Some\Other\Class', $calls[1][1][0]);
+        $this->assertInstanceOf(Reference::class, $calls[1][1][1]);
+        $this->assertSame('other.service.name', (string) $calls[1][1][1]);
+    }
+
+    public function testDefaultGenerators()
+    {
+        $container = new ContainerBuilder;
+        $this->e->load([], $container);
+        $definition = $container->getDefinition('innmind_neo4j.generators');
+        $calls = $definition->getMethodCalls();
+
+        $this->assertSame(0, count($calls));
     }
 }
