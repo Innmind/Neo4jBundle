@@ -233,7 +233,25 @@ services:
         class: Innmind\Neo4j\ONM\Entity\DataExtractor
         arguments:
             - '@innmind_neo4j.metadatas'
+            -
+                Innmind\Neo4j\ONM\Metadata\Aggregate: '@innmind_neo4j.entity.data_extractor.aggregate'
+                Innmind\Neo4j\ONM\Metadata\Relationship: '@innmind_neo4j.entity.data_extractor.relationship'
         public: false
+        factory:
+            - Innmind\Neo4jBundle\Factory\DataExtractorFactory
+            - make
+
+    innmind_neo4j.entity.data_extractor.aggregate:
+        class: Innmind\Neo4j\ONM\Entity\DataExtractor\AggregateExtractor
+        public: false
+        arguments:
+            - ~
+
+    innmind_neo4j.entity.data_extractor.relationship:
+        class: Innmind\Neo4j\ONM\Entity\DataExtractor\RelationshipExtractor
+        public: false
+        arguments:
+            - ~
 
     innmind_neo4j.repository_factory:
         class: Innmind\Neo4j\ONM\RepositoryFactory
