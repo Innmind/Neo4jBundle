@@ -22,7 +22,8 @@
         "symfony/config": "~3.0",
         "innmind/neo4j-onm": "^2.0",
         "innmind/filesystem": "^1.0",
-        "symfony/yaml": "~3.0"
+        "symfony/yaml": "~3.0",
+        "innmind/neo4j-dbal": "~2.2"
     },
     "autoload": {
         "psr-4": {

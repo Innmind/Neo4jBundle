@@ -33,12 +33,23 @@ services:
             - '@innmind_neo4j.generators'
         public: false
 
-    innmind_neo4j.connection:
+    innmind_neo4j.connection: '@innmind_neo4j.connection.logger'
+
+    innmind_neo4j.connection.default:
         class: Innmind\Neo4j\DBAL\Connection
         arguments:
             - '@innmind_neo4j.connection.transport'
             - '@innmind_neo4j.connection.transactions'
         public: false
+
+    innmind_neo4j.connection.logger:
+        class: Innmind\Neo4j\DBAL\Connection\LoggerConnection
+        arguments:
+            - '@innmind_neo4j.connection.default'
+            - '@logger'
+        public: false
+        tags:
+            - { name: monolog.logger, channel: neo4j }
 
     innmind_neo4j.connection.transport:
         class: Innmind\Neo4j\DBAL\Transport\Http
