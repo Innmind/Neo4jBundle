@@ -17,25 +17,31 @@ use PHPUnit\Framework\TestCase;
 
 class RegisterRepositoriesPassTest extends TestCase
 {
+    public function testInterface()
+    {
+        $this->assertInstanceOf(
+            CompilerPassInterface::class,
+            new RegisterRepositoriesPass
+        );
+    }
+
     public function testProcessRepositoryFactoryConfigurator()
     {
-        $c = new ContainerBuilder;
-        (new InnmindNeo4jExtension)->load([], $c);
-        $c->setDefinition(
+        $container = new ContainerBuilder;
+        (new InnmindNeo4jExtension)->load([], $container);
+        $container->setDefinition(
             'foo',
             (new Definition)
                 ->addTag('innmind_neo4j.repository', ['class' => 'stdClass'])
         );
-        $this->assertSame(
-            null,
-            ($p = new RegisterRepositoriesPass)->process($c)
+        $this->assertNull(
+            (new RegisterRepositoriesPass)->process($container)
         );
-        $this->assertInstanceOf(CompilerPassInterface::class, $p);
 
-        $definition = $c->getDefinition('innmind_neo4j.repository_factory.configurator');
+        $definition = $container->getDefinition('innmind_neo4j.repository_factory.configurator');
         $calls = $definition->getMethodCalls();
 
-        $this->assertSame(1, count($calls));
+        $this->assertCount(1, $calls);
         $this->assertSame('register', $calls[0][0]);
         $this->assertSame('stdClass', $calls[0][1][0]);
         $this->assertInstanceOf(Reference::class, $calls[0][1][1]);
@@ -48,13 +54,13 @@ class RegisterRepositoriesPassTest extends TestCase
      */
     public function testThrowWhenNoClassForRepository()
     {
-        $c = new ContainerBuilder;
-        (new InnmindNeo4jExtension)->load([], $c);
-        $c->setDefinition(
+        $container = new ContainerBuilder;
+        (new InnmindNeo4jExtension)->load([], $container);
+        $container->setDefinition(
             'foo',
             (new Definition)
                 ->addTag('innmind_neo4j.repository')
         );
-        (new RegisterRepositoriesPass)->process($c);
+        (new RegisterRepositoriesPass)->process($container);
     }
 }

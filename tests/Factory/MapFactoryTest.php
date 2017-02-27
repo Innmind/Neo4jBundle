@@ -23,9 +23,9 @@ class MapFactoryTest extends TestCase
      */
     public function testMake(string $class, string $type, array $argument)
     {
-        $r = MapFactory::make($class, $type, $argument);
+        $service = MapFactory::make($class, $type, $argument);
 
-        $this->assertInstanceOf($class, $r);
+        $this->assertInstanceOf($class, $service);
     }
 
     public function factories()

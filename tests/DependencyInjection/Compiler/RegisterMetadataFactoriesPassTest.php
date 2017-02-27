@@ -16,20 +16,26 @@ use PHPUnit\Framework\TestCase;
 
 class RegisterMetadataFactoriesPassTest extends TestCase
 {
+    public function testInterface()
+    {
+        $this->assertInstanceOf(
+            CompilerPassInterface::class,
+            new RegisterMetadataFactoriesPass
+        );
+    }
+
     public function testProcess()
     {
-        $c = new ContainerBuilder;
-        (new InnmindNeo4jExtension)->load([], $c);
-        $this->assertSame(
-            null,
-            ($p = new RegisterMetadataFactoriesPass)->process($c)
+        $container = new ContainerBuilder;
+        (new InnmindNeo4jExtension)->load([], $container);
+        $this->assertNull(
+            (new RegisterMetadataFactoriesPass)->process($container)
         );
-        $this->assertInstanceOf(CompilerPassInterface::class, $p);
 
-        $def = $c->getDefinition('innmind_neo4j.metadata_builder');
+        $def = $container->getDefinition('innmind_neo4j.metadata_builder');
         $arg = $def->getArgument(1);
 
-        $this->assertSame(2, count($arg));
+        $this->assertCount(2, $arg);
         $this->assertSame(
             ['aggregate', 'relationship'],
             array_keys($arg)

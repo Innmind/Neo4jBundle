@@ -17,17 +17,23 @@ use PHPUnit\Framework\TestCase;
 
 class RegisterEntityFactoriesPassTest extends TestCase
 {
+    public function testInterface()
+    {
+        $this->assertInstanceOf(
+            CompilerPassInterface::class,
+            new RegisterEntityFactoriesPass
+        );
+    }
+
     public function testProcess()
     {
-        $c = new ContainerBuilder;
-        (new InnmindNeo4jExtension)->load([], $c);
-        $this->assertSame(
-            null,
-            ($p = new RegisterEntityFactoriesPass)->process($c)
+        $container = new ContainerBuilder;
+        (new InnmindNeo4jExtension)->load([], $container);
+        $this->assertNull(
+            (new RegisterEntityFactoriesPass)->process($container)
         );
-        $this->assertInstanceOf(CompilerPassInterface::class, $p);
 
-        $definition = $c->getDefinition('innmind_neo4j.entity_factory.resolver');
+        $definition = $container->getDefinition('innmind_neo4j.entity_factory.resolver');
         $arguments = $definition->getArguments();
 
         $this->assertCount(2, $arguments);

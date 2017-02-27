@@ -21,6 +21,14 @@ use PHPUnit\Framework\TestCase;
 
 class InjectEntityDefinitionsPassTest extends TestCase
 {
+    public function testInterface()
+    {
+        $this->assertInstanceOf(
+            CompilerPassInterface::class,
+            new InjectEntityDefinitionsPass
+        );
+    }
+
     public function testProcess()
     {
         $container = new ContainerBuilder;
@@ -34,9 +42,8 @@ class InjectEntityDefinitionsPassTest extends TestCase
         );
         (new InnmindNeo4jExtension)->load([], $container);
         $this->assertNull(
-            ($pass = new InjectEntityDefinitionsPass)->process($container)
+            (new InjectEntityDefinitionsPass)->process($container)
         );
-        $this->assertInstanceOf(CompilerPassInterface::class, $pass);
 
         $def = $container->getDefinition('innmind_neo4j.metadata_builder');
         $calls = $def->getMethodCalls();

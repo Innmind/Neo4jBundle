@@ -17,7 +17,7 @@ class MetadataBuilderFactoryTest extends TestCase
 {
     public function testMake()
     {
-        $mb = MetadataBuilderFactory::make(
+        $builder = MetadataBuilderFactory::make(
             new Types,
             [
                 Aggregate::class => new AggregateFactory(new Types),
@@ -25,6 +25,6 @@ class MetadataBuilderFactoryTest extends TestCase
             new Configuration
         );
 
-        $this->assertInstanceOf(MetadataBuilder::class, $mb);
+        $this->assertInstanceOf(MetadataBuilder::class, $builder);
     }
 }
