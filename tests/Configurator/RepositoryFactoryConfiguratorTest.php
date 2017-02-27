@@ -15,8 +15,9 @@ use Innmind\Neo4j\ONM\{
     Translation\MatchTranslator,
     Translation\SpecificationTranslator
 };
+use PHPUnit\Framework\TestCase;
 
-class RepositoryFactoryConfiguratorTest extends \PHPUnit_Framework_TestCase
+class RepositoryFactoryConfiguratorTest extends TestCase
 {
     public function testConfigure()
     {

@@ -17,8 +17,9 @@ use Symfony\Component\DependencyInjection\{
     ContainerBuilder,
     Compiler\CompilerPassInterface
 };
+use PHPUnit\Framework\TestCase;
 
-class InjectEntityDefinitionsPassTest extends \PHPUnit_Framework_TestCase
+class InjectEntityDefinitionsPassTest extends TestCase
 {
     public function testProcess()
     {

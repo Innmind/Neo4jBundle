@@ -14,8 +14,9 @@ use Innmind\Neo4j\ONM\Translation\{
     SpecificationTranslator,
     SpecificationTranslatorInterface
 };
+use PHPUnit\Framework\TestCase;
 
-class MapFactoryTest extends \PHPUnit_Framework_TestCase
+class MapFactoryTest extends TestCase
 {
     /**
      * @dataProvider factories
@@ -34,28 +35,28 @@ class MapFactoryTest extends \PHPUnit_Framework_TestCase
                 ResultTranslator::class,
                 EntityTranslatorInterface::class,
                 [
-                    'foo' => $this->getMock(EntityTranslatorInterface::class),
+                    'foo' => $this->createMock(EntityTranslatorInterface::class),
                 ],
             ],
             [
                 IdentityMatchTranslator::class,
                 IdentityMatchTranslatorInterface::class,
                 [
-                    'foo' => $this->getMock(IdentityMatchTranslatorInterface::class),
+                    'foo' => $this->createMock(IdentityMatchTranslatorInterface::class),
                 ],
             ],
             [
                 MatchTranslator::class,
                 MatchTranslatorInterface::class,
                 [
-                    'foo' => $this->getMock(MatchTranslatorInterface::class),
+                    'foo' => $this->createMock(MatchTranslatorInterface::class),
                 ],
             ],
             [
                 SpecificationTranslator::class,
                 SpecificationTranslatorInterface::class,
                 [
-                    'foo' => $this->getMock(SpecificationTranslatorInterface::class),
+                    'foo' => $this->createMock(SpecificationTranslatorInterface::class),
                 ],
             ],
         ];

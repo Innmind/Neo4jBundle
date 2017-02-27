@@ -10,8 +10,9 @@ use Innmind\Neo4j\DBAL\{
     Cypher
 };
 use Psr\Log\LoggerInterface;
+use PHPUnit\Framework\TestCase;
 
-class LoggerListenerTest extends \PHPUnit_Framework_TestCase
+class LoggerListenerTest extends TestCase
 {
     public function testLog()
     {

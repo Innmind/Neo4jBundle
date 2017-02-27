@@ -12,8 +12,9 @@ use Symfony\Component\DependencyInjection\{
     Reference,
     Compiler\CompilerPassInterface
 };
+use PHPUnit\Framework\TestCase;
 
-class RegisterMetadataFactoriesPassTest extends \PHPUnit_Framework_TestCase
+class RegisterMetadataFactoriesPassTest extends TestCase
 {
     public function testProcess()
     {

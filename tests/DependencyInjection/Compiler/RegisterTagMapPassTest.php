@@ -16,8 +16,9 @@ use Symfony\Component\DependencyInjection\{
     Reference,
     Compiler\CompilerPassInterface
 };
+use PHPUnit\Framework\TestCase;
 
-class RegisterTagMapPassTest extends \PHPUnit_Framework_TestCase
+class RegisterTagMapPassTest extends TestCase
 {
     /**
      * @dataProvider tags

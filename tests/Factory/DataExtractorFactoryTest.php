@@ -13,8 +13,9 @@ use Innmind\Neo4j\ONM\{
     Entity\DataExtractor
 };
 use Innmind\Immutable\CollectionInterface;
+use PHPUnit\Framework\TestCase;
 
-class DataExtractorFactoryTest extends \PHPUnit_Framework_TestCase
+class DataExtractorFactoryTest extends TestCase
 {
     public function testMake()
     {

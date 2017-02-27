@@ -8,8 +8,9 @@ use Innmind\Neo4j\ONM\{
     PersisterInterface,
     Persister\DelegationPersister
 };
+use PHPUnit\Framework\TestCase;
 
-class DelegationPersisterFactoryTest extends \PHPUnit_Framework_TestCase
+class DelegationPersisterFactoryTest extends TestCase
 {
     public function testMake()
     {

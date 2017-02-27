@@ -13,8 +13,9 @@ use Symfony\Component\DependencyInjection\{
     Definition,
     Compiler\CompilerPassInterface
 };
+use PHPUnit\Framework\TestCase;
 
-class RegistrableServicePassTest extends \PHPUnit_Framework_TestCase
+class RegistrableServicePassTest extends TestCase
 {
     public function testProcess()
     {

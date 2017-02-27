@@ -20,8 +20,9 @@ use Symfony\Component\{
     EventDispatcher\EventDispatcher
 };
 use Psr\Log\NullLogger;
+use PHPUnit\Framework\TestCase;
 
-class InnmindNeo4jBundleTest extends \PHPUnit_Framework_TestCase
+class InnmindNeo4jBundleTest extends TestCase
 {
     public function testBuild()
     {

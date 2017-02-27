@@ -12,8 +12,9 @@ use Symfony\Component\DependencyInjection\{
     ContainerBuilder,
     Reference
 };
+use PHPUnit\Framework\TestCase;
 
-class InnmindNeo4jExtensionTest extends \PHPUnit_Framework_TestCase
+class InnmindNeo4jExtensionTest extends TestCase
 {
     private $c;
     private $e;

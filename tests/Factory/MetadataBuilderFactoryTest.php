@@ -11,8 +11,9 @@ use Innmind\Neo4j\ONM\{
     Configuration,
     MetadataBuilder
 };
+use PHPUnit\Framework\TestCase;
 
-class MetadataBuilderFactoryTest extends \PHPUnit_Framework_TestCase
+class MetadataBuilderFactoryTest extends TestCase
 {
     public function testMake()
     {
