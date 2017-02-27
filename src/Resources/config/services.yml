@@ -11,7 +11,7 @@ services:
         class: Innmind\TimeContinuum\TimeContinuum\Earth
         public: false
 
-    innmind_neo4j.event_bus:
+    innmind_neo4j.event_bus.null:
         class: Innmind\EventBus\NullEventBus
         public: false
 

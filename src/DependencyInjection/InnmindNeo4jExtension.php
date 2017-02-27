@@ -46,6 +46,10 @@ final class InnmindNeo4jExtension extends Extension
             ->injectClock(
                 $container,
                 $config['clock']
+            )
+            ->aliasEventBus(
+                $container,
+                $config['event_bus']
             );
     }
 
@@ -151,6 +155,23 @@ final class InnmindNeo4jExtension extends Extension
         $container
             ->getDefinition('innmind_neo4j.dbal.connection.transactions')
             ->replaceArgument(1, new Reference($clock));
+
+        return $this;
+    }
+
+    /**
+     * Create the alias for the event bus
+     *
+     * @param ContainerBuilder $container
+     * @param string $eventBus
+     *
+     * @return self
+     */
+    private function aliasEventBus(
+        ContainerBuilder $container,
+        string $eventBus
+    ): self {
+        $container->setAlias('innmind_neo4j.event_bus', $eventBus);
 
         return $this;
     }

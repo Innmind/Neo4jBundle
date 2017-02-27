@@ -57,6 +57,10 @@ final class Configuration implements ConfigurationInterface
                     ->info('The clock service to use (instance of TimeContinuumInterface)')
                     ->defaultValue('innmind_neo4j.clock')
                 ->end()
+                ->scalarNode('event_bus')
+                    ->info('The event bus service to use for persisters')
+                    ->defaultValue('innmind_neo4j.event_bus.null')
+                ->end()
             ->end();
 
         return $treeBuilder;

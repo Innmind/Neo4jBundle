@@ -36,6 +36,7 @@ class InnmindNeo4jExtensionTest extends TestCase
                 'persister' => 'another_service',
                 'metadata_configuration' => 'config',
                 'clock' => 'clock',
+                'event_bus' => 'event_bus',
             ],
         ];
 
@@ -86,6 +87,12 @@ class InnmindNeo4jExtensionTest extends TestCase
 
         $this->assertInstanceOf(Reference::class, $def->getArgument(1));
         $this->assertSame('clock', (string) $def->getArgument(1));
+    }
+
+    public function testEventBus()
+    {
+        $alias = $this->container->getAlias('innmind_neo4j.event_bus');
+        $this->assertSame('event_bus', (string) $alias);
     }
 
     public function testDefaultPersister()
@@ -143,5 +150,13 @@ class InnmindNeo4jExtensionTest extends TestCase
 
         $this->assertInstanceOf(Reference::class, $def->getArgument(2));
         $this->assertSame('innmind_neo4j.metadata_builder.configuration', (string) $def->getArgument(2));
+    }
+
+    public function testDefaultEventBus()
+    {
+        $container = new ContainerBuilder;
+        $this->extension->load([], $container);
+        $alias = $container->getAlias('innmind_neo4j.event_bus');
+        $this->assertSame('innmind_neo4j.event_bus.null', (string) $alias);
     }
 }
