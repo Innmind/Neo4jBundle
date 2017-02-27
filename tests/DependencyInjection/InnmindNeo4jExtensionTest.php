@@ -112,9 +112,9 @@ class InnmindNeo4jExtensionTest extends TestCase
         $container = new ContainerBuilder;
         $this->extension->load([], $container);
         $def = $container->getDefinition('innmind_neo4j.types');
-        $calls = $def->getMethodCalls();
+        $arguments = $def->getArguments();
 
-        $this->assertCount(0, $calls);
+        $this->assertCount(0, $arguments);
     }
 
     public function testDefaultMetadataConfiguration()
