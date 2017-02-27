@@ -32,7 +32,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\Innmind\\Neo4jBundle\\": "tests"
+            "Tests\\Innmind\\Neo4jBundle\\": "tests",
+            "Fixtures\\Innmind\\Neo4jBundle\\": "fixtures"
         }
     },
     "require-dev": {

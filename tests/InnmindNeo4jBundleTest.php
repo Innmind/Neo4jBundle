@@ -7,10 +7,10 @@ use Innmind\Neo4jBundle\{
     InnmindNeo4jBundle,
     DependencyInjection\InnmindNeo4jExtension
 };
-use Tests\Innmind\Neo4jBundle\{
-    Fixture\FooBundle\FooBundle,
-    Fixture\BarBundle\BarBundle,
-    Fixture\EmptyBundle\EmptyBundle
+use Fixtures\Innmind\Neo4jBundle\{
+    FooBundle\FooBundle,
+    BarBundle\BarBundle,
+    EmptyBundle\EmptyBundle
 };
 use Innmind\Neo4j\ONM\ManagerInterface;
 use Symfony\Component\{
