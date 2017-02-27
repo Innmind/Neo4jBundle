@@ -11,7 +11,7 @@ use Symfony\Component\{
     DependencyInjection\Reference
 };
 
-class InnmindNeo4jExtension extends Extension
+final class InnmindNeo4jExtension extends Extension
 {
     /**
      * {@inheritdoc}
@@ -27,26 +27,16 @@ class InnmindNeo4jExtension extends Extension
         $loader->load('services.yml');
 
         $this
-            ->injectPersister(
-                $container,
-                $config['persister']
-            )
-            ->configureConnection(
-                $container,
-                $config['connection']
-            )
-            ->registerTypes(
-                $container,
-                $config['types']
-            )
+            ->injectPersister($container, $config['persister'])
+            ->configureConnection($container, $config['connection'])
+            ->registerTypes($container, $config['types'])
             ->injectMetadataConfiguration(
                 $container,
                 $config['metadata_configuration']
             )
-            ->configureGenerators(
-                $container,
-                $config['identity_generators']
-            );
+            ->injectClock($container, $config['clock'])
+            ->aliasEventBus($container, $config['event_bus'])
+            ->aliasDbalConnection($container, $config['dbal_connection']);
     }
 
     /**
@@ -80,10 +70,10 @@ class InnmindNeo4jExtension extends Extension
         ContainerBuilder $container,
         array $config
     ): self {
-        $transactions = $container->getDefinition('innmind_neo4j.connection.transactions');
-        $transport = $container->getDefinition('innmind_neo4j.connection.transport');
-        $server = $container->getDefinition('innmind_neo4j.connection.server');
-        $authentication = $container->getDefinition('innmind_neo4j.connection.authentication');
+        $transactions = $container->getDefinition('innmind_neo4j.dbal.connection.transactions');
+        $transport = $container->getDefinition('innmind_neo4j.dbal.connection.transport');
+        $server = $container->getDefinition('innmind_neo4j.dbal.connection.server');
+        $authentication = $container->getDefinition('innmind_neo4j.dbal.connection.authentication');
 
         $server
             ->replaceArgument(0, $config['scheme'])
@@ -92,10 +82,6 @@ class InnmindNeo4jExtension extends Extension
         $authentication
             ->replaceArgument(0, $config['user'])
             ->replaceArgument(1, $config['password']);
-        $transactions
-            ->replaceArgument(2, $config['timeout']);
-        $transport
-            ->replaceArgument(4, $config['timeout']);
 
         return $this;
     }
@@ -115,7 +101,7 @@ class InnmindNeo4jExtension extends Extension
         $definition = $container->getDefinition('innmind_neo4j.types');
 
         foreach ($types as $class) {
-            $definition->addMethodCall('register', [$class]);
+            $definition->addArgument($class);
         }
 
         return $this;
@@ -140,18 +126,55 @@ class InnmindNeo4jExtension extends Extension
         return $this;
     }
 
-    private function configureGenerators(
+    /**
+     * Inject the clock in the transactions service
+     *
+     * @param ContainerBuilder $container
+     * @param string $clock
+     *
+     * @return self
+     */
+    private function injectClock(
         ContainerBuilder $container,
-        array $generators
+        string $clock
     ): self {
-        $definition = $container->getDefinition('innmind_neo4j.generators');
+        $container
+            ->getDefinition('innmind_neo4j.dbal.connection.transactions')
+            ->replaceArgument(1, new Reference($clock));
 
-        foreach ($generators as $class => $generator) {
-            $definition->addMethodCall(
-                'register',
-                [$class, new Reference($generator)]
-            );
-        }
+        return $this;
+    }
+
+    /**
+     * Create the alias for the event bus
+     *
+     * @param ContainerBuilder $container
+     * @param string $eventBus
+     *
+     * @return self
+     */
+    private function aliasEventBus(
+        ContainerBuilder $container,
+        string $eventBus
+    ): self {
+        $container->setAlias('innmind_neo4j.event_bus', $eventBus);
+
+        return $this;
+    }
+
+    /**
+     * Create the alias for dbal connection
+     *
+     * @param ContainerBuilder $container
+     * @param string $connection
+     *
+     * @return self
+     */
+    private function aliasDbalConnection(
+        ContainerBuilder $container,
+        string $connection
+    ): self {
+        $container->setAlias('innmind_neo4j.dbal.connection', $connection);
 
         return $this;
     }

@@ -1,0 +1,27 @@
+services:
+    innmind_neo4j.entity_factory:
+        class: Innmind\Neo4j\ONM\EntityFactory
+        public: false
+        arguments:
+            - '@innmind_neo4j.translator.result'
+            - '@innmind_neo4j.generators'
+            - '@innmind_neo4j.entity_factory.resolver'
+            - '@innmind_neo4j.entity_container'
+
+    innmind_neo4j.entity_factory.resolver:
+        class: Innmind\Neo4j\ONM\EntityFactory\Resolver
+        public: false
+
+    innmind_neo4j.entity_factory.aggregate:
+        class: Innmind\Neo4j\ONM\EntityFactory\AggregateFactory
+        public: false
+        tags:
+            - { name: innmind_neo4j.entity_factory }
+
+    innmind_neo4j.entity_factory.relationship:
+        class: Innmind\Neo4j\ONM\EntityFactory\RelationshipFactory
+        arguments:
+            - '@innmind_neo4j.generators'
+        public: false
+        tags:
+            - { name: innmind_neo4j.entity_factory }

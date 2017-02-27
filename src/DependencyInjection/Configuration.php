@@ -9,7 +9,7 @@ use Symfony\Component\Config\Definition\{
     ConfigurationInterface
 };
 
-class Configuration implements ConfigurationInterface
+final class Configuration implements ConfigurationInterface
 {
     /**
      * {@inheritdoc}
@@ -39,17 +39,9 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('password')
                             ->defaultValue('neo4j')
                         ->end()
-                        ->integerNode('timeout')
-                            ->defaultValue(60)
-                        ->end()
                     ->end()
                 ->end()
                 ->arrayNode('types')
-                    ->defaultValue([])
-                    ->prototype('scalar')->end()
-                ->end()
-                ->arrayNode('identity_generators')
-                    ->info('Identity generators, with keys as identity classes and values as generator service name')
                     ->defaultValue([])
                     ->prototype('scalar')->end()
                 ->end()
@@ -60,6 +52,18 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('metadata_configuration')
                     ->info('The service to use to validate a metadata configuration')
                     ->defaultValue('innmind_neo4j.metadata_builder.configuration')
+                ->end()
+                ->scalarNode('clock')
+                    ->info('The clock service to use (instance of TimeContinuumInterface)')
+                    ->defaultValue('innmind_neo4j.clock')
+                ->end()
+                ->scalarNode('event_bus')
+                    ->info('The event bus service to use for persisters')
+                    ->defaultValue('innmind_neo4j.event_bus.null')
+                ->end()
+                ->scalarNode('dbal_connection')
+                    ->info('The dbal connection service to use')
+                    ->defaultValue('innmind_neo4j.dbal.connection.logger')
                 ->end()
             ->end();
 

@@ -1,0 +1,38 @@
+services:
+    innmind_neo4j.metadatas:
+        class: Innmind\Neo4j\ONM\Metadatas
+        public: false
+        factory:
+            - '@innmind_neo4j.metadata_builder'
+            - container
+
+    innmind_neo4j.metadata_builder:
+        class: Innmind\Neo4j\ONM\MetadataBuilder
+        public: false
+        arguments:
+            - '@innmind_neo4j.types'
+            - []
+            - ~
+        factory:
+            - Innmind\Neo4jBundle\Factory\MetadataBuilderFactory
+            - make
+
+    innmind_neo4j.metadata_builder.configuration:
+        class: Innmind\Neo4j\ONM\Configuration
+        public: false
+
+    innmind_neo4j.metadata_factory.aggregate:
+        class: Innmind\Neo4j\ONM\MetadataFactory\AggregateFactory
+        public: false
+        arguments:
+            - '@innmind_neo4j.types'
+        tags:
+            - { name: 'innmind_neo4j.metadata_factory', type: aggregate }
+
+    innmind_neo4j.metadata_factory.relationship:
+        class: Innmind\Neo4j\ONM\MetadataFactory\RelationshipFactory
+        public: false
+        arguments:
+            - '@innmind_neo4j.types'
+        tags:
+            - { name: 'innmind_neo4j.metadata_factory', type: relationship }

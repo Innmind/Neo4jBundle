@@ -5,7 +5,7 @@ namespace Innmind\Neo4jBundle\Factory;
 
 use Innmind\Immutable\Map;
 
-class MapFactory
+final class MapFactory
 {
     public static function make(string $class, string $type, array $elements)
     {

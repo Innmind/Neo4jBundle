@@ -12,42 +12,41 @@ use Symfony\Component\DependencyInjection\{
     ContainerBuilder,
     Reference
 };
+use PHPUnit\Framework\TestCase;
 
-class InnmindNeo4jExtensionTest extends \PHPUnit_Framework_TestCase
+class InnmindNeo4jExtensionTest extends TestCase
 {
-    private $c;
-    private $e;
+    private $container;
+    private $extension;
 
     public function setUp()
     {
-        $this->c = new ContainerBuilder;
-        $this->e = new InnmindNeo4jExtension;
+        $this->container = new ContainerBuilder;
+        $this->extension = new InnmindNeo4jExtension;
         $config = [
             'innmind_neo4j' => [
                 'connection' => [
                     'scheme' => 'http',
                     'host' => 'docker',
                     'port' => 1337,
-                    'timeout' => 42,
                     'user' => 'neo4j',
                     'password' => 'ci',
                 ],
                 'types' => ['foo', 'bar'],
-                'identity_generators' => [
-                    'Some\Class' => 'service.name',
-                    'Some\Other\Class' => 'other.service.name',
-                ],
                 'persister' => 'another_service',
                 'metadata_configuration' => 'config',
+                'clock' => 'clock',
+                'event_bus' => 'event_bus',
+                'dbal_connection' => 'connection',
             ],
         ];
 
-        $this->e->load($config, $this->c);
+        $this->extension->load($config, $this->container);
     }
 
     public function testPersister()
     {
-        $def = $this->c->getDefinition('innmind_neo4j.unit_of_work');
+        $def = $this->container->getDefinition('innmind_neo4j.unit_of_work');
 
         $this->assertInstanceOf(Reference::class, $def->getArgument(5));
         $this->assertSame('another_service', (string) $def->getArgument(5));
@@ -55,47 +54,59 @@ class InnmindNeo4jExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testConnection()
     {
-        $def = $this->c->getDefinition('innmind_neo4j.connection.server');
+        $def = $this->container->getDefinition('innmind_neo4j.dbal.connection.server');
         $this->assertSame('http', $def->getArgument(0));
         $this->assertSame('docker', $def->getArgument(1));
         $this->assertSame(1337, $def->getArgument(2));
 
-        $def = $this->c->getDefinition('innmind_neo4j.connection.authentication');
+        $def = $this->container->getDefinition('innmind_neo4j.dbal.connection.authentication');
         $this->assertSame('neo4j', $def->getArgument(0));
         $this->assertSame('ci', $def->getArgument(1));
-
-        $def = $this->c->getDefinition('innmind_neo4j.connection.transactions');
-        $this->assertSame(42, $def->getArgument(2));
-
-        $transport = $this->c->getDefinition('innmind_neo4j.connection.transport');
-        $this->assertSame(42, $transport->getArgument(4));
     }
 
     public function testTypes()
     {
-        $def = $this->c->getDefinition('innmind_neo4j.types');
-        $calls = $def->getMethodCalls();
+        $def = $this->container->getDefinition('innmind_neo4j.types');
+        $arguments = $def->getArguments();
 
-        $this->assertSame(2, count($calls));
-        $this->assertSame('register', $calls[0][0]);
-        $this->assertSame('foo', $calls[0][1][0]);
-        $this->assertSame('register', $calls[1][0]);
-        $this->assertSame('bar', $calls[1][1][0]);
+        $this->assertCount(2, $arguments);
+        $this->assertSame('foo', $arguments[0]);
+        $this->assertSame('bar', $arguments[1]);
     }
 
     public function testMetadataConfiguration()
     {
-        $def = $this->c->getDefinition('innmind_neo4j.metadata_builder');
+        $def = $this->container->getDefinition('innmind_neo4j.metadata_builder');
 
         $this->assertInstanceOf(Reference::class, $def->getArgument(2));
         $this->assertSame('config', (string) $def->getArgument(2));
     }
 
+    public function testClock()
+    {
+        $def = $this->container->getDefinition('innmind_neo4j.dbal.connection.transactions');
+
+        $this->assertInstanceOf(Reference::class, $def->getArgument(1));
+        $this->assertSame('clock', (string) $def->getArgument(1));
+    }
+
+    public function testEventBus()
+    {
+        $alias = $this->container->getAlias('innmind_neo4j.event_bus');
+        $this->assertSame('event_bus', (string) $alias);
+    }
+
+    public function testDbalConnection()
+    {
+        $alias = $this->container->getAlias('innmind_neo4j.dbal.connection');
+        $this->assertSame('connection', (string) $alias);
+    }
+
     public function testDefaultPersister()
     {
-        $c = new ContainerBuilder;
-        $this->e->load([], $c);
-        $def = $c->getDefinition('innmind_neo4j.unit_of_work');
+        $container = new ContainerBuilder;
+        $this->extension->load([], $container);
+        $def = $container->getDefinition('innmind_neo4j.unit_of_work');
 
         $this->assertInstanceOf(Reference::class, $def->getArgument(5));
         $this->assertSame(
@@ -106,68 +117,61 @@ class InnmindNeo4jExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testDefaultConnection()
     {
-        $c = new ContainerBuilder;
-        $this->e->load([], $c);
+        $container = new ContainerBuilder;
+        $this->extension->load([], $container);
 
-        $def = $this->c->getDefinition('innmind_neo4j.connection.server');
+        $def = $this->container->getDefinition('innmind_neo4j.dbal.connection.server');
         $this->assertSame('http', $def->getArgument(0));
         $this->assertSame('docker', $def->getArgument(1));
         $this->assertSame(1337, $def->getArgument(2));
 
-        $def = $this->c->getDefinition('innmind_neo4j.connection.authentication');
+        $def = $this->container->getDefinition('innmind_neo4j.dbal.connection.authentication');
         $this->assertSame('neo4j', $def->getArgument(0));
         $this->assertSame('ci', $def->getArgument(1));
-
-        $def = $c->getDefinition('innmind_neo4j.connection.transactions');
-        $this->assertSame(60, $def->getArgument(2));
-
-        $transport = $c->getDefinition('innmind_neo4j.connection.transport');
-        $this->assertSame(60, $transport->getArgument(4));
     }
 
     public function testDefaultTypes()
     {
-        $c = new ContainerBuilder;
-        $this->e->load([], $c);
-        $def = $c->getDefinition('innmind_neo4j.types');
-        $calls = $def->getMethodCalls();
+        $container = new ContainerBuilder;
+        $this->extension->load([], $container);
+        $def = $container->getDefinition('innmind_neo4j.types');
+        $arguments = $def->getArguments();
 
-        $this->assertSame(0, count($calls));
+        $this->assertCount(0, $arguments);
+    }
+
+    public function testDefaultClock()
+    {
+        $container = new ContainerBuilder;
+        $this->extension->load([], $container);
+        $def = $container->getDefinition('innmind_neo4j.dbal.connection.transactions');
+        $this->assertInstanceOf(Reference::class, $def->getArgument(1));
+        $this->assertSame('innmind_neo4j.clock', (string) $def->getArgument(1));
     }
 
     public function testDefaultMetadataConfiguration()
     {
-        $c = new ContainerBuilder;
-        $this->e->load([], $c);
-        $def = $c->getDefinition('innmind_neo4j.metadata_builder');
+        $container = new ContainerBuilder;
+        $this->extension->load([], $container);
+        $def = $container->getDefinition('innmind_neo4j.metadata_builder');
 
         $this->assertInstanceOf(Reference::class, $def->getArgument(2));
         $this->assertSame('innmind_neo4j.metadata_builder.configuration', (string) $def->getArgument(2));
     }
 
-    public function testRegisterGenerators()
-    {
-        $definition = $this->c->getDefinition('innmind_neo4j.generators');
-
-        $calls = $definition->getMethodCalls();
-        $this->assertCount(2, $calls);
-        $this->assertSame('register', $calls[0][0]);
-        $this->assertSame('Some\Class', $calls[0][1][0]);
-        $this->assertInstanceOf(Reference::class, $calls[0][1][1]);
-        $this->assertSame('service.name', (string) $calls[0][1][1]);
-        $this->assertSame('register', $calls[1][0]);
-        $this->assertSame('Some\Other\Class', $calls[1][1][0]);
-        $this->assertInstanceOf(Reference::class, $calls[1][1][1]);
-        $this->assertSame('other.service.name', (string) $calls[1][1][1]);
-    }
-
-    public function testDefaultGenerators()
+    public function testDefaultEventBus()
     {
         $container = new ContainerBuilder;
-        $this->e->load([], $container);
-        $definition = $container->getDefinition('innmind_neo4j.generators');
-        $calls = $definition->getMethodCalls();
+        $this->extension->load([], $container);
+        $alias = $container->getAlias('innmind_neo4j.event_bus');
+        $this->assertSame('innmind_neo4j.event_bus.null', (string) $alias);
+    }
 
-        $this->assertSame(0, count($calls));
+    public function testDefaultDbalConnection()
+    {
+        $container = new ContainerBuilder;
+        $this->extension->load([], $container);
+        $alias = $container->getAlias('innmind_neo4j.dbal.connection');
+        $this->assertSame('innmind_neo4j.dbal.connection.logger', (string) $alias);
     }
 }

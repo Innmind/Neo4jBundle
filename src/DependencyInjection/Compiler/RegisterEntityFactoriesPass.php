@@ -9,7 +9,7 @@ use Symfony\Component\DependencyInjection\{
     Reference
 };
 
-class RegisterEntityFactoriesPass implements CompilerPassInterface
+final class RegisterEntityFactoriesPass implements CompilerPassInterface
 {
     /**
      * {@inheritdoc}
@@ -20,9 +20,8 @@ class RegisterEntityFactoriesPass implements CompilerPassInterface
         $ids = $container->findTaggedServiceIds('innmind_neo4j.entity_factory');
 
         foreach ($ids as $id => $tags) {
-            $definition->addMethodCall(
-                'register',
-                [new Reference($id)]
+            $definition->addArgument(
+                new Reference($id)
             );
         }
     }

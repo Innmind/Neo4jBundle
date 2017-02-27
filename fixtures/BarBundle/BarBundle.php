@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Tests\Innmind\Neo4jBundle\Fixture\BarBundle;
+namespace Fixtures\Innmind\Neo4jBundle\BarBundle;
 
 class BarBundle
 {

@@ -16,9 +16,18 @@ use Symfony\Component\DependencyInjection\{
     Reference,
     Compiler\CompilerPassInterface
 };
+use PHPUnit\Framework\TestCase;
 
-class RegisterTagMapPassTest extends \PHPUnit_Framework_TestCase
+class RegisterTagMapPassTest extends TestCase
 {
+    public function testInterface()
+    {
+        $this->assertInstanceOf(
+            CompilerPassInterface::class,
+            new RegisterTagMapPass('service', 'tag')
+        );
+    }
+
     /**
      * @dataProvider tags
      */
@@ -28,18 +37,16 @@ class RegisterTagMapPassTest extends \PHPUnit_Framework_TestCase
         string $aggregate,
         string $relationship
     ) {
-        $c = new ContainerBuilder;
-        (new InnmindNeo4jExtension)->load([], $c);
-        $this->assertSame(
-            null,
-            ($p = new RegisterTagMapPass($service, $tag))->process($c)
+        $container = new ContainerBuilder;
+        (new InnmindNeo4jExtension)->load([], $container);
+        $this->assertNull(
+            (new RegisterTagMapPass($service, $tag))->process($container)
         );
-        $this->assertInstanceOf(CompilerPassInterface::class, $p);
 
-        $def = $c->getDefinition($service);
+        $def = $container->getDefinition($service);
         $arg = $def->getArgument(2);
 
-        $this->assertSame(2, count($arg));
+        $this->assertCount(2, $arg);
         $this->assertSame(
             [Aggregate::class, Relationship::class],
             array_keys($arg)

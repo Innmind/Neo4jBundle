@@ -8,15 +8,16 @@ use Innmind\Neo4j\ONM\{
     PersisterInterface,
     Persister\DelegationPersister
 };
+use PHPUnit\Framework\TestCase;
 
-class DelegationPersisterFactoryTest extends \PHPUnit_Framework_TestCase
+class DelegationPersisterFactoryTest extends TestCase
 {
     public function testMake()
     {
-        $p = DelegationPersisterFactory::make([
+        $persister = DelegationPersisterFactory::make([
             $this->createMock(PersisterInterface::class)
         ]);
 
-        $this->assertInstanceOf(DelegationPersister::class, $p);
+        $this->assertInstanceOf(DelegationPersister::class, $persister);
     }
 }

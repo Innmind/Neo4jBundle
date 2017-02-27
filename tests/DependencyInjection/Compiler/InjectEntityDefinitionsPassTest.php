@@ -7,23 +7,32 @@ use Innmind\Neo4jBundle\{
     DependencyInjection\Compiler\InjectEntityDefinitionsPass,
     DependencyInjection\InnmindNeo4jExtension
 };
-use Tests\Innmind\Neo4jBundle\{
-    Fixture\FooBundle\FooBundle,
-    Fixture\BarBundle\BarBundle,
-    Fixture\EmptyBundle\EmptyBundle
+use Fixtures\Innmind\Neo4jBundle\{
+    FooBundle\FooBundle,
+    BarBundle\BarBundle,
+    EmptyBundle\EmptyBundle
 };
 use Innmind\Neo4j\ONM\Identity\Uuid;
 use Symfony\Component\DependencyInjection\{
     ContainerBuilder,
     Compiler\CompilerPassInterface
 };
+use PHPUnit\Framework\TestCase;
 
-class InjectEntityDefinitionsPassTest extends \PHPUnit_Framework_TestCase
+class InjectEntityDefinitionsPassTest extends TestCase
 {
+    public function testInterface()
+    {
+        $this->assertInstanceOf(
+            CompilerPassInterface::class,
+            new InjectEntityDefinitionsPass
+        );
+    }
+
     public function testProcess()
     {
-        $c = new ContainerBuilder;
-        $c->setParameter(
+        $container = new ContainerBuilder;
+        $container->setParameter(
             'kernel.bundles',
             [
                 'FixtureFooBundle' => FooBundle::class,
@@ -31,17 +40,15 @@ class InjectEntityDefinitionsPassTest extends \PHPUnit_Framework_TestCase
                 'FixtureEmptyBundle' => EmptyBundle::class,
             ]
         );
-        (new InnmindNeo4jExtension)->load([], $c);
-        $this->assertSame(
-            null,
-            ($p = new InjectEntityDefinitionsPass)->process($c)
+        (new InnmindNeo4jExtension)->load([], $container);
+        $this->assertNull(
+            (new InjectEntityDefinitionsPass)->process($container)
         );
-        $this->assertInstanceOf(CompilerPassInterface::class, $p);
 
-        $def = $c->getDefinition('innmind_neo4j.metadata_builder');
+        $def = $container->getDefinition('innmind_neo4j.metadata_builder');
         $calls = $def->getMethodCalls();
 
-        $this->assertSame(1, count($calls));
+        $this->assertCount(1, $calls);
         $this->assertSame('inject', $calls[0][0]);
         $this->assertSame(
             [

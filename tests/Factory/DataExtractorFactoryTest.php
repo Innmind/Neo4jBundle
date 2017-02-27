@@ -12,13 +12,13 @@ use Innmind\Neo4j\ONM\{
     Entity\DataExtractorInterface,
     Entity\DataExtractor
 };
-use Innmind\Immutable\CollectionInterface;
+use Innmind\Immutable\MapInterface;
+use PHPUnit\Framework\TestCase;
 
-class DataExtractorFactoryTest extends \PHPUnit_Framework_TestCase
+class DataExtractorFactoryTest extends TestCase
 {
     public function testMake()
     {
-        $metadatas = new Metadatas;
         $meta = $this->createMock(EntityInterface::class);
         $meta
             ->method('alias')
@@ -26,7 +26,7 @@ class DataExtractorFactoryTest extends \PHPUnit_Framework_TestCase
         $meta
             ->method('class')
             ->willReturn(new ClassName('stdClass'));
-        $metadatas->register($meta);
+        $metadatas = new Metadatas($meta);
 
         $entity = new \stdClass;
         $mock = $this->createMock(DataExtractorInterface::class);
@@ -35,7 +35,7 @@ class DataExtractorFactoryTest extends \PHPUnit_Framework_TestCase
             ->method('extract')
             ->with($entity, $meta)
             ->willReturn(
-                $expected = $this->createMock(CollectionInterface::class)
+                $expected = $this->createMock(MapInterface::class)
             );
         $extractor = DataExtractorFactory::make(
             $metadatas,

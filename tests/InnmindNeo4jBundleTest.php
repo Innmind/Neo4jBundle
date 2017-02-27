@@ -7,38 +7,34 @@ use Innmind\Neo4jBundle\{
     InnmindNeo4jBundle,
     DependencyInjection\InnmindNeo4jExtension
 };
-use Tests\Innmind\Neo4jBundle\{
-    Fixture\FooBundle\FooBundle,
-    Fixture\BarBundle\BarBundle,
-    Fixture\EmptyBundle\EmptyBundle
+use Fixtures\Innmind\Neo4jBundle\{
+    FooBundle\FooBundle,
+    BarBundle\BarBundle,
+    EmptyBundle\EmptyBundle
 };
 use Innmind\Neo4j\ONM\ManagerInterface;
 use Symfony\Component\{
     DependencyInjection\ContainerBuilder,
     DependencyInjection\Definition,
-    HttpKernel\Bundle\Bundle,
-    EventDispatcher\EventDispatcher
+    HttpKernel\Bundle\Bundle
 };
 use Psr\Log\NullLogger;
+use PHPUnit\Framework\TestCase;
 
-class InnmindNeo4jBundleTest extends \PHPUnit_Framework_TestCase
+class InnmindNeo4jBundleTest extends TestCase
 {
     public function testBuild()
     {
-        $c = new ContainerBuilder;
-        ($b = new InnmindNeo4jBundle)->build($c);
-        $this->assertInstanceOf(Bundle::class, $b);
-        $c->registerExtension(new InnmindNeo4jExtension);
-        $c->loadFromExtension('innmind_neo4j', []);
-        $c->setDefinition(
-            'event_dispatcher',
-            new Definition(EventDispatcher::class)
-        );
-        $c->setDefinition(
+        $container = new ContainerBuilder;
+        ($bundle = new InnmindNeo4jBundle)->build($container);
+        $this->assertInstanceOf(Bundle::class, $bundle);
+        $container->registerExtension(new InnmindNeo4jExtension);
+        $container->loadFromExtension('innmind_neo4j', []);
+        $container->setDefinition(
             'logger',
             new Definition(NullLogger::class)
         );
-        $c->setParameter(
+        $container->setParameter(
             'kernel.bundles',
             [
                 'FixtureFooBundle' => FooBundle::class,
@@ -46,11 +42,11 @@ class InnmindNeo4jBundleTest extends \PHPUnit_Framework_TestCase
                 'FixtureEmptyBundle' => EmptyBundle::class,
             ]
         );
-        $c->compile();
+        $container->compile();
 
         $this->assertInstanceOf(
             ManagerInterface::class,
-            $c->get('innmind_neo4j.manager')
+            $container->get('innmind_neo4j.manager')
         );
     }
 }

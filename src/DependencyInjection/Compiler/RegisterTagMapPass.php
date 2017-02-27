@@ -10,7 +10,7 @@ use Symfony\Component\DependencyInjection\{
     Reference
 };
 
-class RegisterTagMapPass implements CompilerPassInterface
+final class RegisterTagMapPass implements CompilerPassInterface
 {
     private $service;
     private $tag;
