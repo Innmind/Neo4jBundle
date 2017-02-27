@@ -7,7 +7,8 @@ use Innmind\Neo4jBundle\DependencyInjection\Compiler\{
     RegistrableServicePass,
     RegisterEntityFactoriesPass,
     RegisterMetadataFactoriesPass,
-    InjectEntityDefinitionsPass
+    InjectEntityDefinitionsPass,
+    RegisterIdentityGeneratorsPass
 };
 use Symfony\Component\{
     HttpKernel\Bundle\Bundle,
@@ -25,10 +26,7 @@ class InnmindNeo4jBundle extends Bundle
                 'innmind_neo4j.translator.result',
                 'innmind_neo4j.translation.result'
             ))
-            ->addCompilerPass(new RegistrableServicePass(
-                'innmind_neo4j.generators',
-                'innmind_neo4j.identity.generator'
-            ))
+            ->addCompilerPass(new RegisterIdentityGeneratorsPass)
             ->addCompilerPass(new RegistrableServicePass(
                 'innmind_neo4j.repository_factory.configurator',
                 'innmind_neo4j.repository'

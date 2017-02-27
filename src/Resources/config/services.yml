@@ -153,6 +153,13 @@ services:
     innmind_neo4j.generators:
         class: Innmind\Neo4j\ONM\Identity\Generators
         public: false
+        arguments:
+            - Innmind\Neo4j\ONM\Identity\Generators
+            - Innmind\Neo4j\ONM\Identity\GeneratorInterface
+            - []
+        factory:
+            - Innmind\Neo4jBundle\Factory\MapFactory
+            - make
 
     innmind_neo4j.entity_factory.resolver:
         class: Innmind\Neo4j\ONM\EntityFactory\Resolver
