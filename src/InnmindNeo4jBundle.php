@@ -15,7 +15,7 @@ use Symfony\Component\{
     DependencyInjection\ContainerBuilder
 };
 
-class InnmindNeo4jBundle extends Bundle
+final class InnmindNeo4jBundle extends Bundle
 {
     public function build(ContainerBuilder $container)
     {

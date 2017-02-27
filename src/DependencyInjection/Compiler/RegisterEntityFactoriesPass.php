@@ -9,7 +9,7 @@ use Symfony\Component\DependencyInjection\{
     Reference
 };
 
-class RegisterEntityFactoriesPass implements CompilerPassInterface
+final class RegisterEntityFactoriesPass implements CompilerPassInterface
 {
     /**
      * {@inheritdoc}

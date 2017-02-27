@@ -9,7 +9,7 @@ use Symfony\Component\Config\Definition\{
     ConfigurationInterface
 };
 
-class Configuration implements ConfigurationInterface
+final class Configuration implements ConfigurationInterface
 {
     /**
      * {@inheritdoc}

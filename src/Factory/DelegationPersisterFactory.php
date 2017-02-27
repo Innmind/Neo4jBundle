@@ -9,7 +9,7 @@ use Innmind\Neo4j\ONM\{
 };
 use Innmind\Immutable\Stream;
 
-class DelegationPersisterFactory
+final class DelegationPersisterFactory
 {
     /**
      * Build the delegation persister

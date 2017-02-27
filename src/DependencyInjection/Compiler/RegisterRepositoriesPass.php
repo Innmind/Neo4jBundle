@@ -10,7 +10,7 @@ use Symfony\Component\DependencyInjection\{
     Reference
 };
 
-class RegisterRepositoriesPass implements CompilerPassInterface
+final class RegisterRepositoriesPass implements CompilerPassInterface
 {
     /**
      * {@inheritdoc}

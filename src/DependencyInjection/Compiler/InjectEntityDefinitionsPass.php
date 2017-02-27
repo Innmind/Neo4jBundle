@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\{
 };
 use Symfony\Component\Yaml\Yaml;
 
-class InjectEntityDefinitionsPass implements CompilerPassInterface
+final class InjectEntityDefinitionsPass implements CompilerPassInterface
 {
     /**
      * {@inheritdoc}

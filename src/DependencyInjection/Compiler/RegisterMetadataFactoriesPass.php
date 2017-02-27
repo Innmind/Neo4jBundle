@@ -10,7 +10,7 @@ use Symfony\Component\DependencyInjection\{
     Reference
 };
 
-class RegisterMetadataFactoriesPass implements CompilerPassInterface
+final class RegisterMetadataFactoriesPass implements CompilerPassInterface
 {
     /**
      * {@inheritdoc}

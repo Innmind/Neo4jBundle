@@ -11,7 +11,7 @@ use Symfony\Component\{
     DependencyInjection\Reference
 };
 
-class InnmindNeo4jExtension extends Extension
+final class InnmindNeo4jExtension extends Extension
 {
     /**
      * {@inheritdoc}

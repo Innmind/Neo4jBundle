@@ -10,7 +10,7 @@ use Innmind\Neo4j\ONM\{
 };
 use Innmind\Immutable\Map;
 
-class RepositoryFactoryConfigurator
+final class RepositoryFactoryConfigurator
 {
     private $metadatas;
     private $repositories;

@@ -11,7 +11,7 @@ use Innmind\Neo4j\ONM\{
 use Innmind\Immutable\Map;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
-class MetadataBuilderFactory
+final class MetadataBuilderFactory
 {
     /**
      * Create a new metadata builder
