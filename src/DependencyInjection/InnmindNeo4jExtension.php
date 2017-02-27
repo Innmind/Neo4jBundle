@@ -107,7 +107,7 @@ class InnmindNeo4jExtension extends Extension
         $definition = $container->getDefinition('innmind_neo4j.types');
 
         foreach ($types as $class) {
-            $definition->addMethodCall('register', [$class]);
+            $definition->addArgument($class);
         }
 
         return $this;

@@ -64,13 +64,11 @@ class InnmindNeo4jExtensionTest extends TestCase
     public function testTypes()
     {
         $def = $this->c->getDefinition('innmind_neo4j.types');
-        $calls = $def->getMethodCalls();
+        $arguments = $def->getArguments();
 
-        $this->assertSame(2, count($calls));
-        $this->assertSame('register', $calls[0][0]);
-        $this->assertSame('foo', $calls[0][1][0]);
-        $this->assertSame('register', $calls[1][0]);
-        $this->assertSame('bar', $calls[1][1][0]);
+        $this->assertCount(2, $arguments);
+        $this->assertSame('foo', $arguments[0]);
+        $this->assertSame('bar', $arguments[1]);
     }
 
     public function testMetadataConfiguration()
