@@ -37,6 +37,7 @@ class InnmindNeo4jExtensionTest extends TestCase
                 'metadata_configuration' => 'config',
                 'clock' => 'clock',
                 'event_bus' => 'event_bus',
+                'dbal_connection' => 'connection',
             ],
         ];
 
@@ -93,6 +94,12 @@ class InnmindNeo4jExtensionTest extends TestCase
     {
         $alias = $this->container->getAlias('innmind_neo4j.event_bus');
         $this->assertSame('event_bus', (string) $alias);
+    }
+
+    public function testDbalConnection()
+    {
+        $alias = $this->container->getAlias('innmind_neo4j.dbal.connection');
+        $this->assertSame('connection', (string) $alias);
     }
 
     public function testDefaultPersister()
@@ -158,5 +165,13 @@ class InnmindNeo4jExtensionTest extends TestCase
         $this->extension->load([], $container);
         $alias = $container->getAlias('innmind_neo4j.event_bus');
         $this->assertSame('innmind_neo4j.event_bus.null', (string) $alias);
+    }
+
+    public function testDefaultDbalConnection()
+    {
+        $container = new ContainerBuilder;
+        $this->extension->load([], $container);
+        $alias = $container->getAlias('innmind_neo4j.dbal.connection');
+        $this->assertSame('innmind_neo4j.dbal.connection.logger', (string) $alias);
     }
 }

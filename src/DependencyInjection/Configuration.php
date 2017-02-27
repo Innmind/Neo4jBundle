@@ -61,6 +61,10 @@ final class Configuration implements ConfigurationInterface
                     ->info('The event bus service to use for persisters')
                     ->defaultValue('innmind_neo4j.event_bus.null')
                 ->end()
+                ->scalarNode('dbal_connection')
+                    ->info('The dbal connection service to use')
+                    ->defaultValue('innmind_neo4j.dbal.connection.logger')
+                ->end()
             ->end();
 
         return $treeBuilder;

@@ -2,8 +2,6 @@ imports:
     - { resource: 'http.yml' }
 
 services:
-    innmind_neo4j.dbal.connection: '@innmind_neo4j.dbal.connection.logger'
-
     innmind_neo4j.dbal.connection.default:
         class: Innmind\Neo4j\DBAL\Connection
         public: false

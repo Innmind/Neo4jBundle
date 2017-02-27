@@ -27,30 +27,16 @@ final class InnmindNeo4jExtension extends Extension
         $loader->load('services.yml');
 
         $this
-            ->injectPersister(
-                $container,
-                $config['persister']
-            )
-            ->configureConnection(
-                $container,
-                $config['connection']
-            )
-            ->registerTypes(
-                $container,
-                $config['types']
-            )
+            ->injectPersister($container, $config['persister'])
+            ->configureConnection($container, $config['connection'])
+            ->registerTypes($container, $config['types'])
             ->injectMetadataConfiguration(
                 $container,
                 $config['metadata_configuration']
             )
-            ->injectClock(
-                $container,
-                $config['clock']
-            )
-            ->aliasEventBus(
-                $container,
-                $config['event_bus']
-            );
+            ->injectClock($container, $config['clock'])
+            ->aliasEventBus($container, $config['event_bus'])
+            ->aliasDbalConnection($container, $config['dbal_connection']);
     }
 
     /**
@@ -172,6 +158,23 @@ final class InnmindNeo4jExtension extends Extension
         string $eventBus
     ): self {
         $container->setAlias('innmind_neo4j.event_bus', $eventBus);
+
+        return $this;
+    }
+
+    /**
+     * Create the alias for dbal connection
+     *
+     * @param ContainerBuilder $container
+     * @param string $connection
+     *
+     * @return self
+     */
+    private function aliasDbalConnection(
+        ContainerBuilder $container,
+        string $connection
+    ): self {
+        $container->setAlias('innmind_neo4j.dbal.connection', $connection);
 
         return $this;
     }
