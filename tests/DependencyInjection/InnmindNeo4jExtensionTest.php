@@ -51,12 +51,12 @@ class InnmindNeo4jExtensionTest extends TestCase
 
     public function testConnection()
     {
-        $def = $this->c->getDefinition('innmind_neo4j.connection.server');
+        $def = $this->c->getDefinition('innmind_neo4j.dbal.connection.server');
         $this->assertSame('http', $def->getArgument(0));
         $this->assertSame('docker', $def->getArgument(1));
         $this->assertSame(1337, $def->getArgument(2));
 
-        $def = $this->c->getDefinition('innmind_neo4j.connection.authentication');
+        $def = $this->c->getDefinition('innmind_neo4j.dbal.connection.authentication');
         $this->assertSame('neo4j', $def->getArgument(0));
         $this->assertSame('ci', $def->getArgument(1));
     }
@@ -97,12 +97,12 @@ class InnmindNeo4jExtensionTest extends TestCase
         $c = new ContainerBuilder;
         $this->e->load([], $c);
 
-        $def = $this->c->getDefinition('innmind_neo4j.connection.server');
+        $def = $this->c->getDefinition('innmind_neo4j.dbal.connection.server');
         $this->assertSame('http', $def->getArgument(0));
         $this->assertSame('docker', $def->getArgument(1));
         $this->assertSame(1337, $def->getArgument(2));
 
-        $def = $this->c->getDefinition('innmind_neo4j.connection.authentication');
+        $def = $this->c->getDefinition('innmind_neo4j.dbal.connection.authentication');
         $this->assertSame('neo4j', $def->getArgument(0));
         $this->assertSame('ci', $def->getArgument(1));
     }

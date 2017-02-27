@@ -1,0 +1,38 @@
+services:
+    innmind_neo4j.persister.delegation:
+        class: Innmind\Neo4j\ONM\Persister\DelegationPersister
+        public: false
+        factory:
+            - Innmind\Neo4jBundle\Factory\DelegationPersisterFactory
+            - make
+        arguments:
+            -
+                - '@innmind_neo4j.persister.insert'
+                - '@innmind_neo4j.persister.update'
+                - '@innmind_neo4j.persister.remove'
+
+    innmind_neo4j.persister.insert:
+        class: Innmind\Neo4j\ONM\Persister\InsertPersister
+        public: false
+        arguments:
+            - '@innmind_neo4j.entity.changeset_computer'
+            - '@innmind_neo4j.event_bus'
+            - '@innmind_neo4j.entity.data_extractor'
+            - '@innmind_neo4j.metadatas'
+
+    innmind_neo4j.persister.update:
+        class: Innmind\Neo4j\ONM\Persister\UpdatePersister
+        public: false
+        arguments:
+            - '@innmind_neo4j.entity.changeset_computer'
+            - '@innmind_neo4j.event_bus'
+            - '@innmind_neo4j.entity.data_extractor'
+            - '@innmind_neo4j.metadatas'
+
+    innmind_neo4j.persister.remove:
+        class: Innmind\Neo4j\ONM\Persister\RemovePersister
+        public: false
+        arguments:
+            - '@innmind_neo4j.entity.changeset_computer'
+            - '@innmind_neo4j.event_bus'
+            - '@innmind_neo4j.metadatas'

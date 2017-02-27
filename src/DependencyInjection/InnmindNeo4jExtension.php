@@ -76,10 +76,10 @@ final class InnmindNeo4jExtension extends Extension
         ContainerBuilder $container,
         array $config
     ): self {
-        $transactions = $container->getDefinition('innmind_neo4j.connection.transactions');
-        $transport = $container->getDefinition('innmind_neo4j.connection.transport');
-        $server = $container->getDefinition('innmind_neo4j.connection.server');
-        $authentication = $container->getDefinition('innmind_neo4j.connection.authentication');
+        $transactions = $container->getDefinition('innmind_neo4j.dbal.connection.transactions');
+        $transport = $container->getDefinition('innmind_neo4j.dbal.connection.transport');
+        $server = $container->getDefinition('innmind_neo4j.dbal.connection.server');
+        $authentication = $container->getDefinition('innmind_neo4j.dbal.connection.authentication');
 
         $server
             ->replaceArgument(0, $config['scheme'])

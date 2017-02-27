@@ -1,16 +1,10 @@
-parameters:
-    innmind_neo4j.translator.result.aggregate.class: Innmind\Neo4j\ONM\Translation\Result\AggregateTranslator
-    innmind_neo4j.translator.result.relationship.class: Innmind\Neo4j\ONM\Translation\Result\RelationshipTranslator
-    innmind_neo4j.entity_factory.aggregate.class: Innmind\Neo4j\ONM\EntityFactory\AggregateFactory
-    innmind_neo4j.entity_factory.relationship.class: Innmind\Neo4j\ONM\EntityFactory\RelationshipFactory
-    innmind_neo4j.translator.identity_match.aggregate.class: Innmind\Neo4j\ONM\Translation\IdentityMatch\AggregateTranslator
-    innmind_neo4j.translator.identity_match.relationship.class: Innmind\Neo4j\ONM\Translation\IdentityMatch\RelationshipTranslator
-    innmind_neo4j.translator.match.aggregate.class: Innmind\Neo4j\ONM\Translation\Match\AggregateTranslator
-    innmind_neo4j.translator.match.relationship.class: Innmind\Neo4j\ONM\Translation\Match\RelationshipTranslator
-    innmind_neo4j.translator.specification.aggregate.class: Innmind\Neo4j\ONM\Translation\Specification\AggregateTranslator
-    innmind_neo4j.translator.specification.relationship.class: Innmind\Neo4j\ONM\Translation\Specification\RelationshipTranslator
-    innmind_neo4j.metadata_factory.aggregate.class: Innmind\Neo4j\ONM\MetadataFactory\AggregateFactory
-    innmind_neo4j.metadata_factory.relationship.class: Innmind\Neo4j\ONM\MetadataFactory\RelationshipFactory
+imports:
+    - { resource: 'services/dbal.yml' }
+    - { resource: 'services/persisters.yml' }
+    - { resource: 'services/entity_factories.yml' }
+    - { resource: 'services/metadatas.yml' }
+    - { resource: 'services/translators.yml' }
+    - { resource: 'services/entity.yml' }
 
 services:
     innmind_neo4j.clock:
@@ -32,7 +26,7 @@ services:
     innmind_neo4j.unit_of_work:
         class: Innmind\Neo4j\ONM\UnitOfWork
         arguments:
-            - '@innmind_neo4j.connection'
+            - '@innmind_neo4j.dbal.connection'
             - '@innmind_neo4j.entity_container'
             - '@innmind_neo4j.entity_factory'
             - '@innmind_neo4j.translator.identity_match'
@@ -41,113 +35,8 @@ services:
             - '@innmind_neo4j.generators'
         public: false
 
-    innmind_neo4j.connection: '@innmind_neo4j.connection.logger'
-
-    innmind_neo4j.connection.default:
-        class: Innmind\Neo4j\DBAL\Connection
-        arguments:
-            - '@innmind_neo4j.connection.transport'
-            - '@innmind_neo4j.connection.transactions'
-        public: false
-
-    innmind_neo4j.connection.logger:
-        class: Innmind\Neo4j\DBAL\Connection\LoggerConnection
-        arguments:
-            - '@innmind_neo4j.connection.default'
-            - '@logger'
-        public: false
-        tags:
-            - { name: monolog.logger, channel: neo4j }
-
-    innmind_neo4j.connection.transport:
-        class: Innmind\Neo4j\DBAL\Transport\Http
-        arguments:
-            - '@innmind_neo4j.connection.translator'
-            - '@innmind_neo4j.connection.transport.http'
-        public: false
-
-    innmind_neo4j.connection.transport.http:
-        class: Innmind\Neo4j\DBAL\HttpTransport\Transport
-        public: false
-        arguments:
-            - '@innmind_neo4j.connection.server'
-            - '@innmind_neo4j.connection.authentication'
-            - '@innmind_neo4j.connection.transport.guzzle'
-
-    innmind_neo4j.connection.transport.guzzle:
-        class: Innmind\HttpTransport\GuzzleTransport
-        public: false
-        arguments:
-            - '@innmind_neo4j.guzzle'
-            - '@innmind_neo4j.http.translator.response'
-
-    innmind_neo4j.guzzle:
-        class: GuzzleHttp\Client
-        public: false
-
-    innmind_neo4j.http.translator.response:
-        class: Innmind\Http\Translator\Response\Psr7Translator
-        public: false
-        arguments:
-            - '@innmind_neo4j.http.header_factory'
-
-    innmind_neo4j.http.header_factory:
-        class: Innmind\Http\Factory\Header\TryFactory
-        public: false
-        factory:
-            - Innmind\Http\Factory\Header\Factories
-            - default
-
-    innmind_neo4j.connection.translator:
-        class: Innmind\Neo4j\DBAL\Translator\HttpTranslator
-        arguments:
-            - '@innmind_neo4j.connection.transactions'
-        public: false
-
-    innmind_neo4j.connection.transactions:
-        class: Innmind\Neo4j\DBAL\Transactions
-        arguments:
-            - '@innmind_neo4j.connection.transport.http'
-            - '@innmind_neo4j.clock'
-        public: false
-
-    innmind_neo4j.connection.server:
-        class: Innmind\Neo4j\DBAL\Server
-        arguments:
-            - ~
-            - ~
-            - ~
-        public: false
-
-    innmind_neo4j.connection.authentication:
-        class: Innmind\Neo4j\DBAL\Authentication
-        arguments:
-            - ~
-            - ~
-        public: false
-
     innmind_neo4j.entity_container:
         class: Innmind\Neo4j\ONM\Entity\Container
-        public: false
-
-    innmind_neo4j.entity_factory:
-        class: Innmind\Neo4j\ONM\EntityFactory
-        arguments:
-            - '@innmind_neo4j.translator.result'
-            - '@innmind_neo4j.generators'
-            - '@innmind_neo4j.entity_factory.resolver'
-            - '@innmind_neo4j.entity_container'
-        public: false
-
-    innmind_neo4j.translator.result:
-        class: Innmind\Neo4j\ONM\Translation\ResultTranslator
-        factory:
-            - Innmind\Neo4jBundle\Factory\MapFactory
-            - make
-        arguments:
-            - Innmind\Neo4j\ONM\Translation\ResultTranslator
-            - Innmind\Neo4j\ONM\Translation\EntityTranslatorInterface
-            - []
         public: false
 
     innmind_neo4j.generators:
@@ -161,151 +50,9 @@ services:
             - Innmind\Neo4jBundle\Factory\MapFactory
             - make
 
-    innmind_neo4j.entity_factory.resolver:
-        class: Innmind\Neo4j\ONM\EntityFactory\Resolver
-        public: false
-
-    innmind_neo4j.entity_factory.aggregate:
-        class: %innmind_neo4j.entity_factory.aggregate.class%
-        public: false
-        tags:
-            - { name: innmind_neo4j.entity_factory }
-
-    innmind_neo4j.entity_factory.relationship:
-        class: %innmind_neo4j.entity_factory.relationship.class%
-        arguments:
-            - '@innmind_neo4j.generators'
-        public: false
-        tags:
-            - { name: innmind_neo4j.entity_factory }
-
-    innmind_neo4j.metadatas:
-        class: Innmind\Neo4j\ONM\Metadatas
-        public: false
-        factory:
-            - '@innmind_neo4j.metadata_builder'
-            - container
-
-    innmind_neo4j.metadata_builder:
-        class: Innmind\Neo4j\ONM\MetadataBuilder
-        factory:
-            - Innmind\Neo4jBundle\Factory\MetadataBuilderFactory
-            - make
-        arguments:
-            - '@innmind_neo4j.types'
-            - []
-            - ~
-        public: false
-
-    innmind_neo4j.metadata_builder.configuration:
-        class: Innmind\Neo4j\ONM\Configuration
-        public: false
-
-    innmind_neo4j.metadata_factory.aggregate:
-        class: %innmind_neo4j.metadata_factory.aggregate.class%
-        arguments:
-            - '@innmind_neo4j.types'
-        public: false
-        tags:
-            - { name: 'innmind_neo4j.metadata_factory', type: aggregate }
-
-    innmind_neo4j.metadata_factory.relationship:
-        class: %innmind_neo4j.metadata_factory.relationship.class%
-        arguments:
-            - '@innmind_neo4j.types'
-        public: false
-        tags:
-            - { name: 'innmind_neo4j.metadata_factory', type: relationship }
-
     innmind_neo4j.types:
         class: Innmind\Neo4j\ONM\Types
         public: false
-
-    innmind_neo4j.translator.identity_match:
-        class: Innmind\Neo4j\ONM\Translation\IdentityMatchTranslator
-        factory:
-            - Innmind\Neo4jBundle\Factory\MapFactory
-            - make
-        arguments:
-            - Innmind\Neo4j\ONM\Translation\IdentityMatchTranslator
-            - Innmind\Neo4j\ONM\Translation\IdentityMatchTranslatorInterface
-            - []
-        public: false
-
-    innmind_neo4j.translator.identity_match.aggregate:
-        class: %innmind_neo4j.translator.identity_match.aggregate.class%
-        public: false
-        tags:
-            - { name: 'innmind_neo4j.translation.identity_match', type: Innmind\Neo4j\ONM\Metadata\Aggregate }
-
-    innmind_neo4j.translator.identity_match.relationship:
-        class: %innmind_neo4j.translator.identity_match.relationship.class%
-        public: false
-        tags:
-            - { name: 'innmind_neo4j.translation.identity_match', type: Innmind\Neo4j\ONM\Metadata\Relationship }
-
-    innmind_neo4j.persister.delegation:
-        class: Innmind\Neo4j\ONM\Persister\DelegationPersister
-        factory:
-            - Innmind\Neo4jBundle\Factory\DelegationPersisterFactory
-            - make
-        arguments:
-            - ['@innmind_neo4j.persister.insert', '@innmind_neo4j.persister.update', '@innmind_neo4j.persister.remove']
-        public: false
-
-    innmind_neo4j.persister.insert:
-        class: Innmind\Neo4j\ONM\Persister\InsertPersister
-        arguments:
-            - '@innmind_neo4j.entity.changeset_computer'
-            - '@innmind_neo4j.event_bus'
-            - '@innmind_neo4j.entity.data_extractor'
-            - '@innmind_neo4j.metadatas'
-        public: false
-
-    innmind_neo4j.persister.update:
-        class: Innmind\Neo4j\ONM\Persister\UpdatePersister
-        arguments:
-            - '@innmind_neo4j.entity.changeset_computer'
-            - '@innmind_neo4j.event_bus'
-            - '@innmind_neo4j.entity.data_extractor'
-            - '@innmind_neo4j.metadatas'
-        public: false
-
-    innmind_neo4j.persister.remove:
-        class: Innmind\Neo4j\ONM\Persister\RemovePersister
-        arguments:
-            - '@innmind_neo4j.entity.changeset_computer'
-            - '@innmind_neo4j.event_bus'
-            - '@innmind_neo4j.metadatas'
-        public: false
-
-    innmind_neo4j.entity.changeset_computer:
-        class: Innmind\Neo4j\ONM\Entity\ChangesetComputer
-        public: false
-
-    innmind_neo4j.entity.data_extractor:
-        class: Innmind\Neo4j\ONM\Entity\DataExtractor
-        arguments:
-            - '@innmind_neo4j.metadatas'
-            -
-                Innmind\Neo4j\ONM\Metadata\Aggregate: '@innmind_neo4j.entity.data_extractor.aggregate'
-                Innmind\Neo4j\ONM\Metadata\Relationship: '@innmind_neo4j.entity.data_extractor.relationship'
-        public: false
-        factory:
-            - Innmind\Neo4jBundle\Factory\DataExtractorFactory
-            - make
-
-    innmind_neo4j.entity.data_extractor.aggregate:
-        class: Innmind\Neo4j\ONM\Entity\DataExtractor\AggregateExtractor
-        public: false
-        arguments:
-            - ~
-
-    innmind_neo4j.entity.data_extractor.relationship:
-        class: Innmind\Neo4j\ONM\Entity\DataExtractor\RelationshipExtractor
-        public: false
-        arguments:
-            - ~
 
     innmind_neo4j.repository_factory:
         class: Innmind\Neo4j\ONM\RepositoryFactory
@@ -324,60 +71,4 @@ services:
             - '@innmind_neo4j.metadatas'
         public: false
 
-    innmind_neo4j.translator.match:
-        class: Innmind\Neo4j\ONM\Translation\MatchTranslator
-        factory:
-            - Innmind\Neo4jBundle\Factory\MapFactory
-            - make
-        arguments:
-            - Innmind\Neo4j\ONM\Translation\MatchTranslator
-            - Innmind\Neo4j\ONM\Translation\MatchTranslatorInterface
-            - []
-        public: false
 
-    innmind_neo4j.translator.match.aggregate:
-        class: %innmind_neo4j.translator.match.aggregate.class%
-        public: false
-        tags:
-            - { name: 'innmind_neo4j.translation.match', type: Innmind\Neo4j\ONM\Metadata\Aggregate }
-
-    innmind_neo4j.translator.match.relationship:
-        class: %innmind_neo4j.translator.match.relationship.class%
-        public: false
-        tags:
-            - { name: 'innmind_neo4j.translation.match', type: Innmind\Neo4j\ONM\Metadata\Relationship }
-
-    innmind_neo4j.translator.specification:
-        class: Innmind\Neo4j\ONM\Translation\SpecificationTranslator
-        factory:
-            - Innmind\Neo4jBundle\Factory\MapFactory
-            - make
-        arguments:
-            - Innmind\Neo4j\ONM\Translation\SpecificationTranslator
-            - Innmind\Neo4j\ONM\Translation\SpecificationTranslatorInterface
-            - []
-        public: false
-
-    innmind_neo4j.translator.specification.aggregate:
-        class: %innmind_neo4j.translator.specification.aggregate.class%
-        public: false
-        tags:
-            - { name: 'innmind_neo4j.translation.specification', type: Innmind\Neo4j\ONM\Metadata\Aggregate }
-
-    innmind_neo4j.translator.specification.relationship:
-        class: %innmind_neo4j.translator.specification.relationship.class%
-        public: false
-        tags:
-            - { name: 'innmind_neo4j.translation.specification', type: Innmind\Neo4j\ONM\Metadata\Relationship }
-
-    innmind_neo4j.translator.result.aggregate:
-        class: %innmind_neo4j.translator.result.aggregate.class%
-        public: false
-        tags:
-            - { name: 'innmind_neo4j.translation.result', type: Innmind\Neo4j\ONM\Metadata\Aggregate }
-
-    innmind_neo4j.translator.result.relationship:
-        class: %innmind_neo4j.translator.result.relationship.class%
-        public: false
-        tags:
-            - { name: 'innmind_neo4j.translation.result', type: Innmind\Neo4j\ONM\Metadata\Relationship }
