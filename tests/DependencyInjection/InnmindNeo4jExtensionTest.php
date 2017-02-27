@@ -126,14 +126,4 @@ class InnmindNeo4jExtensionTest extends TestCase
         $this->assertInstanceOf(Reference::class, $def->getArgument(2));
         $this->assertSame('innmind_neo4j.metadata_builder.configuration', (string) $def->getArgument(2));
     }
-
-    public function testDefaultGenerators()
-    {
-        $container = new ContainerBuilder;
-        $this->extension->load([], $container);
-        $definition = $container->getDefinition('innmind_neo4j.generators');
-        $calls = $definition->getMethodCalls();
-
-        $this->assertCount(0, $calls);
-    }
 }
