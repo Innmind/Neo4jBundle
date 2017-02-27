@@ -35,6 +35,7 @@ class InnmindNeo4jExtensionTest extends TestCase
                 'types' => ['foo', 'bar'],
                 'persister' => 'another_service',
                 'metadata_configuration' => 'config',
+                'clock' => 'clock',
             ],
         ];
 
@@ -79,6 +80,14 @@ class InnmindNeo4jExtensionTest extends TestCase
         $this->assertSame('config', (string) $def->getArgument(2));
     }
 
+    public function testClock()
+    {
+        $def = $this->container->getDefinition('innmind_neo4j.dbal.connection.transactions');
+
+        $this->assertInstanceOf(Reference::class, $def->getArgument(1));
+        $this->assertSame('clock', (string) $def->getArgument(1));
+    }
+
     public function testDefaultPersister()
     {
         $container = new ContainerBuilder;
@@ -115,6 +124,15 @@ class InnmindNeo4jExtensionTest extends TestCase
         $arguments = $def->getArguments();
 
         $this->assertCount(0, $arguments);
+    }
+
+    public function testDefaultClock()
+    {
+        $container = new ContainerBuilder;
+        $this->extension->load([], $container);
+        $def = $container->getDefinition('innmind_neo4j.dbal.connection.transactions');
+        $this->assertInstanceOf(Reference::class, $def->getArgument(1));
+        $this->assertSame('innmind_neo4j.clock', (string) $def->getArgument(1));
     }
 
     public function testDefaultMetadataConfiguration()

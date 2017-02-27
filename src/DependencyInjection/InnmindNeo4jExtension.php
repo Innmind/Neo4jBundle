@@ -42,6 +42,10 @@ final class InnmindNeo4jExtension extends Extension
             ->injectMetadataConfiguration(
                 $container,
                 $config['metadata_configuration']
+            )
+            ->injectClock(
+                $container,
+                $config['clock']
             );
     }
 
@@ -128,6 +132,25 @@ final class InnmindNeo4jExtension extends Extension
         $container
             ->getDefinition('innmind_neo4j.metadata_builder')
             ->replaceArgument(2, new Reference($config));
+
+        return $this;
+    }
+
+    /**
+     * Inject the clock in the transactions service
+     *
+     * @param ContainerBuilder $container
+     * @param string $clock
+     *
+     * @return self
+     */
+    private function injectClock(
+        ContainerBuilder $container,
+        string $clock
+    ): self {
+        $container
+            ->getDefinition('innmind_neo4j.dbal.connection.transactions')
+            ->replaceArgument(1, new Reference($clock));
 
         return $this;
     }

@@ -53,6 +53,10 @@ final class Configuration implements ConfigurationInterface
                     ->info('The service to use to validate a metadata configuration')
                     ->defaultValue('innmind_neo4j.metadata_builder.configuration')
                 ->end()
+                ->scalarNode('clock')
+                    ->info('The clock service to use (instance of TimeContinuumInterface)')
+                    ->defaultValue('innmind_neo4j.clock')
+                ->end()
             ->end();
 
         return $treeBuilder;

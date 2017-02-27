@@ -46,7 +46,7 @@ services:
         public: false
         arguments:
             - '@innmind_neo4j.dbal.connection.transport.http'
-            - '@innmind_neo4j.clock'
+            - ~
 
     innmind_neo4j.dbal.connection.server:
         class: Innmind\Neo4j\DBAL\Server
