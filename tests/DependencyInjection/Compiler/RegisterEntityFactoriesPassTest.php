@@ -28,20 +28,18 @@ class RegisterEntityFactoriesPassTest extends TestCase
         $this->assertInstanceOf(CompilerPassInterface::class, $p);
 
         $definition = $c->getDefinition('innmind_neo4j.entity_factory.resolver');
-        $calls = $definition->getMethodCalls();
+        $arguments = $definition->getArguments();
 
-        $this->assertSame(2, count($calls));
-        $this->assertSame('register', $calls[0][0]);
-        $this->assertInstanceOf(Reference::class, $calls[0][1][0]);
+        $this->assertCount(2, $arguments);
+        $this->assertInstanceOf(Reference::class, $arguments[0]);
         $this->assertSame(
             'innmind_neo4j.entity_factory.aggregate',
-            (string) $calls[0][1][0]
+            (string) $arguments[0]
         );
-        $this->assertSame('register', $calls[1][0]);
-        $this->assertInstanceOf(Reference::class, $calls[1][1][0]);
+        $this->assertInstanceOf(Reference::class, $arguments[1]);
         $this->assertSame(
             'innmind_neo4j.entity_factory.relationship',
-            (string) $calls[1][1][0]
+            (string) $arguments[1]
         );
     }
 }

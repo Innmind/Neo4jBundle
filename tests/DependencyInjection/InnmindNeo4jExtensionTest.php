@@ -29,7 +29,6 @@ class InnmindNeo4jExtensionTest extends TestCase
                     'scheme' => 'http',
                     'host' => 'docker',
                     'port' => 1337,
-                    'timeout' => 42,
                     'user' => 'neo4j',
                     'password' => 'ci',
                 ],
@@ -64,12 +63,6 @@ class InnmindNeo4jExtensionTest extends TestCase
         $def = $this->c->getDefinition('innmind_neo4j.connection.authentication');
         $this->assertSame('neo4j', $def->getArgument(0));
         $this->assertSame('ci', $def->getArgument(1));
-
-        $def = $this->c->getDefinition('innmind_neo4j.connection.transactions');
-        $this->assertSame(42, $def->getArgument(2));
-
-        $transport = $this->c->getDefinition('innmind_neo4j.connection.transport');
-        $this->assertSame(42, $transport->getArgument(4));
     }
 
     public function testTypes()
@@ -118,12 +111,6 @@ class InnmindNeo4jExtensionTest extends TestCase
         $def = $this->c->getDefinition('innmind_neo4j.connection.authentication');
         $this->assertSame('neo4j', $def->getArgument(0));
         $this->assertSame('ci', $def->getArgument(1));
-
-        $def = $c->getDefinition('innmind_neo4j.connection.transactions');
-        $this->assertSame(60, $def->getArgument(2));
-
-        $transport = $c->getDefinition('innmind_neo4j.connection.transport');
-        $this->assertSame(60, $transport->getArgument(4));
     }
 
     public function testDefaultTypes()

@@ -92,10 +92,6 @@ class InnmindNeo4jExtension extends Extension
         $authentication
             ->replaceArgument(0, $config['user'])
             ->replaceArgument(1, $config['password']);
-        $transactions
-            ->replaceArgument(2, $config['timeout']);
-        $transport
-            ->replaceArgument(4, $config['timeout']);
 
         return $this;
     }

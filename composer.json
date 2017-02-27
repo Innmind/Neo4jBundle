@@ -15,15 +15,15 @@
         "issues": "https://github.com/Innmind/Neo4jBundle/issues"
     },
     "require": {
-        "php": "~7.0",
+        "php": "~7.1",
         "psr/log": "~1.0",
         "symfony/dependency-injection": "~3.0",
         "symfony/http-kernel": "~3.0",
         "symfony/config": "~3.0",
-        "innmind/neo4j-onm": "^2.0",
-        "innmind/filesystem": "^1.0",
+        "innmind/neo4j-onm": "~3.0",
+        "innmind/filesystem": "~2.0",
         "symfony/yaml": "~3.0",
-        "innmind/neo4j-dbal": "~2.2"
+        "innmind/neo4j-dbal": "~3.0"
     },
     "autoload": {
         "psr-4": {

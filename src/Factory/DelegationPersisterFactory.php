@@ -7,7 +7,7 @@ use Innmind\Neo4j\ONM\{
     PersisterInterface,
     Persister\DelegationPersister
 };
-use Innmind\Immutable\Set;
+use Innmind\Immutable\Stream;
 
 class DelegationPersisterFactory
 {
@@ -20,12 +20,12 @@ class DelegationPersisterFactory
      */
     public static function make(array $persisters): DelegationPersister
     {
-        $set = new Set(PersisterInterface::class);
+        $stream = new Stream(PersisterInterface::class);
 
         foreach ($persisters as $persister) {
-            $set = $set->add($persister);
+            $stream = $stream->add($persister);
         }
 
-        return new DelegationPersister($set);
+        return new DelegationPersister($stream);
     }
 }

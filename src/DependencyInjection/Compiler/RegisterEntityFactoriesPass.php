@@ -20,9 +20,8 @@ class RegisterEntityFactoriesPass implements CompilerPassInterface
         $ids = $container->findTaggedServiceIds('innmind_neo4j.entity_factory');
 
         foreach ($ids as $id => $tags) {
-            $definition->addMethodCall(
-                'register',
-                [new Reference($id)]
+            $definition->addArgument(
+                new Reference($id)
             );
         }
     }

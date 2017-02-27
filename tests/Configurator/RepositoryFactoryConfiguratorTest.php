@@ -13,8 +13,16 @@ use Innmind\Neo4j\ONM\{
     RepositoryFactory,
     UnitOfWork,
     Translation\MatchTranslator,
-    Translation\SpecificationTranslator
+    Translation\IdentityMatchTranslator,
+    Translation\SpecificationTranslator,
+    Translation\ResultTranslator,
+    Entity\Container,
+    EntityFactory,
+    EntityFactory\Resolver,
+    Identity\Generators,
+    PersisterInterface
 };
+use Innmind\Neo4j\DBAL\ConnectionInterface;
 use PHPUnit\Framework\TestCase;
 
 class RepositoryFactoryConfiguratorTest extends TestCase
@@ -28,28 +36,31 @@ class RepositoryFactoryConfiguratorTest extends TestCase
         $entity
             ->method('alias')
             ->willReturn(new Alias('foo'));
-        $m = new Metadatas;
-        $m->register($entity);
-        $c = new RepositoryFactoryConfigurator($m);
-        $c->register('foo', $r = $this->createMock(RepositoryInterface::class));
-        $f = new RepositoryFactory(
-            $this
-                ->getMockBuilder(UnitOfWork::class)
-                ->disableOriginalConstructor()
-                ->getMock(),
-            $this
-                ->getMockBuilder(MatchTranslator::class)
-                ->disableOriginalConstructor()
-                ->getMock(),
-            $this
-                ->getMockBuilder(SpecificationTranslator::class)
-                ->disableOriginalConstructor()
-                ->getMock()
+        $metadatas = new Metadatas($entity);
+        $configurator = new RepositoryFactoryConfigurator($metadatas);
+        $configurator->register('foo', $repository = $this->createMock(RepositoryInterface::class));
+        $factory = new RepositoryFactory(
+            new UnitOfWork(
+                $this->createMock(ConnectionInterface::class),
+                $container = new Container,
+                new EntityFactory(
+                    new ResultTranslator,
+                    $generators = new Generators,
+                    new Resolver,
+                    $container
+                ),
+                new IdentityMatchTranslator,
+                $metadatas,
+                $this->createMock(PersisterInterface::class),
+                $generators
+            ),
+            new MatchTranslator,
+            new SpecificationTranslator
         );
 
-        $f2 = $c->configure($f);
+        $factory2 = $configurator->configure($factory);
 
-        $this->assertSame($f, $f2);
-        $this->assertSame($r, $f->make($entity));
+        $this->assertSame($factory, $factory2);
+        $this->assertSame($repository, $factory->make($entity));
     }
 }

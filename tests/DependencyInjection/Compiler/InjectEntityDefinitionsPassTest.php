@@ -23,8 +23,8 @@ class InjectEntityDefinitionsPassTest extends TestCase
 {
     public function testProcess()
     {
-        $c = new ContainerBuilder;
-        $c->setParameter(
+        $container = new ContainerBuilder;
+        $container->setParameter(
             'kernel.bundles',
             [
                 'FixtureFooBundle' => FooBundle::class,
@@ -32,17 +32,16 @@ class InjectEntityDefinitionsPassTest extends TestCase
                 'FixtureEmptyBundle' => EmptyBundle::class,
             ]
         );
-        (new InnmindNeo4jExtension)->load([], $c);
-        $this->assertSame(
-            null,
-            ($p = new InjectEntityDefinitionsPass)->process($c)
+        (new InnmindNeo4jExtension)->load([], $container);
+        $this->assertNull(
+            ($pass = new InjectEntityDefinitionsPass)->process($container)
         );
-        $this->assertInstanceOf(CompilerPassInterface::class, $p);
+        $this->assertInstanceOf(CompilerPassInterface::class, $pass);
 
-        $def = $c->getDefinition('innmind_neo4j.metadata_builder');
+        $def = $container->getDefinition('innmind_neo4j.metadata_builder');
         $calls = $def->getMethodCalls();
 
-        $this->assertSame(1, count($calls));
+        $this->assertCount(1, $calls);
         $this->assertSame('inject', $calls[0][0]);
         $this->assertSame(
             [
