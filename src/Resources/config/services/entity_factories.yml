@@ -1,6 +1,6 @@
 services:
     innmind_neo4j.entity_factory:
-        class: Innmind\Neo4j\ONM\EntityFactory
+        class: Innmind\Neo4j\ONM\EntityFactory\EntityFactory
         public: false
         arguments:
             - '@innmind_neo4j.translator.result'

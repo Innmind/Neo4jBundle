@@ -5,7 +5,7 @@ namespace Innmind\Neo4jBundle\Configurator;
 
 use Innmind\Neo4j\ONM\{
     Metadatas,
-    RepositoryInterface,
+    Repository,
     RepositoryFactory
 };
 use Innmind\Immutable\Map;
@@ -18,18 +18,18 @@ final class RepositoryFactoryConfigurator
     public function __construct(Metadatas $metadatas)
     {
         $this->metadatas = $metadatas;
-        $this->repositories = new Map('string', RepositoryInterface::class);
+        $this->repositories = new Map('string', Repository::class);
     }
 
     /**
      * Register a newrepository for the given entity class
      *
      * @param string $class
-     * @param RepositoryInterface $repository
+     * @param Repository $repository
      *
      * @return self
      */
-    public function register(string $class, RepositoryInterface $repository): self
+    public function register(string $class, Repository $repository): self
     {
         $this->repositories = $this->repositories->put($class, $repository);
 
@@ -49,7 +49,7 @@ final class RepositoryFactoryConfigurator
             ->repositories
             ->foreach(function(
                 string $class,
-                RepositoryInterface $repository
+                Repository $repository
             ) use (
                 $factory
             ) {

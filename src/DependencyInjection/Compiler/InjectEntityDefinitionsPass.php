@@ -6,8 +6,8 @@ namespace Innmind\Neo4jBundle\DependencyInjection\Compiler;
 use Innmind\Neo4jBundle\Exception\NoEntityDefinitionFoundException;
 use Innmind\Filesystem\{
     Adapter\FilesystemAdapter,
-    Exception\FileNotFoundException,
-    DirectoryInterface
+    Exception\FileNotFound,
+    Directory
 };
 use Symfony\Component\DependencyInjection\{
     Compiler\CompilerPassInterface,
@@ -66,7 +66,7 @@ final class InjectEntityDefinitionsPass implements CompilerPassInterface
             $config = [];
 
             foreach ($dir as $file) {
-                if ($file instanceof DirectoryInterface) {
+                if ($file instanceof Directory) {
                     continue;
                 }
 
@@ -77,7 +77,7 @@ final class InjectEntityDefinitionsPass implements CompilerPassInterface
             }
 
             return $config;
-        } catch (FileNotFoundException $e) {
+        } catch (FileNotFound $e) {
             throw new NoEntityDefinitionFoundException;
         }
     }

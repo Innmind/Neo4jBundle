@@ -5,8 +5,8 @@ services:
             - Innmind\Neo4jBundle\Factory\MapFactory
             - make
         arguments:
+            - Innmind\Neo4j\ONM\Translation\IdentityMatch\DelegationTranslator
             - Innmind\Neo4j\ONM\Translation\IdentityMatchTranslator
-            - Innmind\Neo4j\ONM\Translation\IdentityMatchTranslatorInterface
             - []
         public: false
 
@@ -28,8 +28,8 @@ services:
             - Innmind\Neo4jBundle\Factory\MapFactory
             - make
         arguments:
+            - Innmind\Neo4j\ONM\Translation\Match\DelegationTranslator
             - Innmind\Neo4j\ONM\Translation\MatchTranslator
-            - Innmind\Neo4j\ONM\Translation\MatchTranslatorInterface
             - []
         public: false
 
@@ -51,8 +51,8 @@ services:
             - Innmind\Neo4jBundle\Factory\MapFactory
             - make
         arguments:
+            - Innmind\Neo4j\ONM\Translation\Specification\DelegationTranslator
             - Innmind\Neo4j\ONM\Translation\SpecificationTranslator
-            - Innmind\Neo4j\ONM\Translation\SpecificationTranslatorInterface
             - []
         public: false
 
@@ -73,7 +73,7 @@ services:
         public: false
         arguments:
             - Innmind\Neo4j\ONM\Translation\ResultTranslator
-            - Innmind\Neo4j\ONM\Translation\EntityTranslatorInterface
+            - Innmind\Neo4j\ONM\Translation\EntityTranslator
             - []
         factory:
             - Innmind\Neo4jBundle\Factory\MapFactory

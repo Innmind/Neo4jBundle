@@ -20,10 +20,10 @@
         "symfony/dependency-injection": "~3.0",
         "symfony/http-kernel": "~3.0",
         "symfony/config": "~3.0",
-        "innmind/neo4j-onm": "~3.0",
-        "innmind/filesystem": "~2.0",
+        "innmind/neo4j-onm": "~4.0",
+        "innmind/filesystem": "~3.0",
         "symfony/yaml": "~3.0",
-        "innmind/neo4j-dbal": "~3.0"
+        "innmind/neo4j-dbal": "~4.0"
     },
     "autoload": {
         "psr-4": {

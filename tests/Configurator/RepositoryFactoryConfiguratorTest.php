@@ -7,29 +7,29 @@ use Innmind\Neo4jBundle\Configurator\RepositoryFactoryConfigurator;
 use Innmind\Neo4j\ONM\{
     Metadata\ClassName,
     Metadata\Alias,
-    Metadata\EntityInterface,
+    Metadata\Entity,
     Metadatas,
-    RepositoryInterface,
+    Repository,
     RepositoryFactory,
     UnitOfWork,
-    Translation\MatchTranslator,
-    Translation\IdentityMatchTranslator,
-    Translation\SpecificationTranslator,
+    Translation\Match\DelegationTranslator as MatchTranslator,
+    Translation\IdentityMatch\DelegationTranslator as IdentityMatchTranslator,
+    Translation\Specification\DelegationTranslator as SpecificationTranslator,
     Translation\ResultTranslator,
     Entity\Container,
-    EntityFactory,
+    EntityFactory\EntityFactory,
     EntityFactory\Resolver,
     Identity\Generators,
-    PersisterInterface
+    Persister
 };
-use Innmind\Neo4j\DBAL\ConnectionInterface;
+use Innmind\Neo4j\DBAL\Connection;
 use PHPUnit\Framework\TestCase;
 
 class RepositoryFactoryConfiguratorTest extends TestCase
 {
     public function testConfigure()
     {
-        $entity = $this->createMock(EntityInterface::class);
+        $entity = $this->createMock(Entity::class);
         $entity
             ->method('class')
             ->willReturn(new ClassName('foo'));
@@ -38,10 +38,10 @@ class RepositoryFactoryConfiguratorTest extends TestCase
             ->willReturn(new Alias('foo'));
         $metadatas = new Metadatas($entity);
         $configurator = new RepositoryFactoryConfigurator($metadatas);
-        $configurator->register('foo', $repository = $this->createMock(RepositoryInterface::class));
+        $configurator->register('foo', $repository = $this->createMock(Repository::class));
         $factory = new RepositoryFactory(
             new UnitOfWork(
-                $this->createMock(ConnectionInterface::class),
+                $this->createMock(Connection::class),
                 $container = new Container,
                 new EntityFactory(
                     new ResultTranslator,
@@ -51,7 +51,7 @@ class RepositoryFactoryConfiguratorTest extends TestCase
                 ),
                 new IdentityMatchTranslator,
                 $metadatas,
-                $this->createMock(PersisterInterface::class),
+                $this->createMock(Persister::class),
                 $generators
             ),
             new MatchTranslator,

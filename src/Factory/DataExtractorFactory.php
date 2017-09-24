@@ -5,21 +5,20 @@ namespace Innmind\Neo4jBundle\Factory;
 
 use Innmind\Neo4j\ONM\{
     Metadatas,
-    Entity\DataExtractorInterface,
     Entity\DataExtractor
 };
 use Innmind\Immutable\Map;
 
 final class DataExtractorFactory
 {
-    public static function make(Metadatas $metadatas, array $extractors): DataExtractor
+    public static function make(Metadatas $metadatas, array $extractors): DataExtractor\DataExtractor
     {
-        $map = new Map('string', DataExtractorInterface::class);
+        $map = new Map('string', DataExtractor::class);
 
         foreach ($extractors as $metadata => $extractor) {
             $map = $map->put($metadata, $extractor);
         }
 
-        return new DataExtractor($metadatas, $map);
+        return new DataExtractor\DataExtractor($metadatas, $map);
     }
 }
