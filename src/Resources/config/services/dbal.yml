@@ -3,7 +3,7 @@ imports:
 
 services:
     innmind_neo4j.dbal.connection.default:
-        class: Innmind\Neo4j\DBAL\Connection
+        class: Innmind\Neo4j\DBAL\Connection\Connection
         public: false
         arguments:
             - '@innmind_neo4j.dbal.connection.transport'

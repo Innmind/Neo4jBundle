@@ -16,7 +16,7 @@ services:
         public: false
 
     innmind_neo4j.manager:
-        class: Innmind\Neo4j\ONM\Manager
+        class: Innmind\Neo4j\ONM\Manager\Manager
         arguments:
             - '@innmind_neo4j.unit_of_work'
             - '@innmind_neo4j.metadatas'
@@ -44,7 +44,7 @@ services:
         public: false
         arguments:
             - Innmind\Neo4j\ONM\Identity\Generators
-            - Innmind\Neo4j\ONM\Identity\GeneratorInterface
+            - Innmind\Neo4j\ONM\Identity\Generator
             - []
         factory:
             - Innmind\Neo4jBundle\Factory\MapFactory

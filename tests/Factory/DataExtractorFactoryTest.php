@@ -6,10 +6,9 @@ namespace Tests\Innmind\Neo4jBundle\Factory;
 use Innmind\Neo4jBundle\Factory\DataExtractorFactory;
 use Innmind\Neo4j\ONM\{
     Metadatas,
-    Metadata\EntityInterface,
+    Metadata\Entity,
     Metadata\Alias,
     Metadata\ClassName,
-    Entity\DataExtractorInterface,
     Entity\DataExtractor
 };
 use Innmind\Immutable\MapInterface;
@@ -19,7 +18,7 @@ class DataExtractorFactoryTest extends TestCase
 {
     public function testMake()
     {
-        $meta = $this->createMock(EntityInterface::class);
+        $meta = $this->createMock(Entity::class);
         $meta
             ->method('alias')
             ->willReturn(new Alias('stdClass'));
@@ -29,7 +28,7 @@ class DataExtractorFactoryTest extends TestCase
         $metadatas = new Metadatas($meta);
 
         $entity = new \stdClass;
-        $mock = $this->createMock(DataExtractorInterface::class);
+        $mock = $this->createMock(DataExtractor::class);
         $mock
             ->expects($this->once())
             ->method('extract')
@@ -44,7 +43,7 @@ class DataExtractorFactoryTest extends TestCase
             ]
         );
 
-        $this->assertInstanceOf(DataExtractor::class, $extractor);
+        $this->assertInstanceOf(DataExtractor\DataExtractor::class, $extractor);
         $this->assertSame($expected, $extractor->extract(new \stdClass));
     }
 }

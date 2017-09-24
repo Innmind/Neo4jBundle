@@ -12,7 +12,7 @@ use Fixtures\Innmind\Neo4jBundle\{
     BarBundle\BarBundle,
     EmptyBundle\EmptyBundle
 };
-use Innmind\Neo4j\ONM\ManagerInterface;
+use Innmind\Neo4j\ONM\Manager;
 use Symfony\Component\{
     DependencyInjection\ContainerBuilder,
     DependencyInjection\Definition,
@@ -45,7 +45,7 @@ class InnmindNeo4jBundleTest extends TestCase
         $container->compile();
 
         $this->assertInstanceOf(
-            ManagerInterface::class,
+            Manager::class,
             $container->get('innmind_neo4j.manager')
         );
     }

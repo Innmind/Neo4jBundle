@@ -5,7 +5,7 @@ namespace Innmind\Neo4jBundle\Factory;
 
 use Innmind\Neo4j\ONM\{
     Types,
-    MetadataFactoryInterface,
+    MetadataFactory,
     MetadataBuilder
 };
 use Innmind\Immutable\Map;
@@ -27,7 +27,7 @@ final class MetadataBuilderFactory
         array $factories,
         ConfigurationInterface $config
     ): MetadataBuilder {
-        $map = new Map('string', MetadataFactoryInterface::class);
+        $map = new Map('string', MetadataFactory::class);
 
         foreach ($factories as $meta => $factory) {
             $map = $map->put($meta, $factory);

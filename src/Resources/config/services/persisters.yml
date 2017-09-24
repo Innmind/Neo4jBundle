@@ -2,14 +2,10 @@ services:
     innmind_neo4j.persister.delegation:
         class: Innmind\Neo4j\ONM\Persister\DelegationPersister
         public: false
-        factory:
-            - Innmind\Neo4jBundle\Factory\DelegationPersisterFactory
-            - make
         arguments:
-            -
-                - '@innmind_neo4j.persister.insert'
-                - '@innmind_neo4j.persister.update'
-                - '@innmind_neo4j.persister.remove'
+            - '@innmind_neo4j.persister.insert'
+            - '@innmind_neo4j.persister.update'
+            - '@innmind_neo4j.persister.remove'
 
     innmind_neo4j.persister.insert:
         class: Innmind\Neo4j\ONM\Persister\InsertPersister

@@ -6,13 +6,13 @@ namespace Tests\Innmind\Neo4jBundle\Factory;
 use Innmind\Neo4jBundle\Factory\MapFactory;
 use Innmind\Neo4j\ONM\Translation\{
     ResultTranslator,
-    EntityTranslatorInterface,
-    IdentityMatchTranslator,
-    IdentityMatchTranslatorInterface,
-    MatchTranslator,
-    MatchTranslatorInterface,
-    SpecificationTranslator,
-    SpecificationTranslatorInterface
+    EntityTranslator,
+    IdentityMatch\DelegationTranslator as IdentityMatchTranslator,
+    IdentityMatchTranslator as IdentityMatchTranslatorInterface,
+    Match\DelegationTranslator as MatchTranslator,
+    MatchTranslator as MatchTranslatorInterface,
+    Specification\DelegationTranslator as SpecificationTranslator,
+    SpecificationTranslator as SpecificationTranslatorInterface
 };
 use PHPUnit\Framework\TestCase;
 
@@ -33,9 +33,9 @@ class MapFactoryTest extends TestCase
         return [
             [
                 ResultTranslator::class,
-                EntityTranslatorInterface::class,
+                EntityTranslator::class,
                 [
-                    'foo' => $this->createMock(EntityTranslatorInterface::class),
+                    'foo' => $this->createMock(EntityTranslator::class),
                 ],
             ],
             [
