@@ -17,6 +17,7 @@ services:
 
     innmind_neo4j.manager:
         class: Innmind\Neo4j\ONM\Manager\Manager
+        public: true
         arguments:
             - '@innmind_neo4j.unit_of_work'
             - '@innmind_neo4j.metadatas'
