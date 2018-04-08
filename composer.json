@@ -17,12 +17,12 @@
     "require": {
         "php": "~7.1",
         "psr/log": "~1.0",
-        "symfony/dependency-injection": "~3.0",
-        "symfony/http-kernel": "~3.0",
-        "symfony/config": "~3.0",
+        "symfony/dependency-injection": "~3.0|~4.0",
+        "symfony/http-kernel": "~3.0|~4.0",
+        "symfony/config": "~3.0|~4.0",
         "innmind/neo4j-onm": "~4.0",
         "innmind/filesystem": "~3.0",
-        "symfony/yaml": "~3.0",
+        "symfony/yaml": "~3.0|~4.0",
         "innmind/neo4j-dbal": "~4.0"
     },
     "autoload": {
